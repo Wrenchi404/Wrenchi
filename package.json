@@ -1,0 +1,23 @@
+{
+  "name": "wrenchi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WrenchWD/Wrenchi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WrenchWD/Wrenchi/issues"
+  },
+  "homepage": "https://github.com/WrenchWD/Wrenchi#readme",
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "erela.js": "^2.3.3"
+  }
+}
