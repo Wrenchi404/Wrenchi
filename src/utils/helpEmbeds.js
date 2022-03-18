@@ -5,7 +5,7 @@ const funEmbed = new MessageEmbed()
     .setColor("RANDOM")
     .setDescription("`hello` Says hello to you \n\n \
     `kill` Kill da person you hate \
-    ")
+")
 
 const modEmbed = new MessageEmbed()
     .setTitle("Moderation Commands")
@@ -18,6 +18,7 @@ const musicEmbed = new MessageEmbed()
     .setTitle("Music Commands")
     .setColor("RANDOM")
     .setDescription("`play` Plays a song \n\n \
+    `search` Searches for a song \n\n \
     `pause` Pauses the current song \n\n \
     `resume` Resumes the current song \n\n \
     `skip` Skips the current song \n\n \

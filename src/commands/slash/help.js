@@ -30,7 +30,7 @@ const command = new SlashCommand()
         let butArray = [funButton, modButton, musicButton, ecoButton]
 
         interaction.reply({
-            content: "Select a category to see more commands. My prefix is `!`. Better use `/` command",
+            content: "Select a category to see more commands. My prefix is `!` better use `/` commands",
             components: [actionRow]
         });
 
