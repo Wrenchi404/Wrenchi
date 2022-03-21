@@ -8,6 +8,7 @@ module.exports = {
         OwnerID: "703881083963441173",
         TestGuildID: "786972520896921611",
         AdminRoleID: "796737398461431838",
+        WelcomeChannelID: "925277230349840394",
     },
     Mongo: {
         MongoURI: "mongodb+srv://Wrench:wrench@dedsec.ntt67.mongodb.net/dedsec?retryWrites=true&w=majority"
