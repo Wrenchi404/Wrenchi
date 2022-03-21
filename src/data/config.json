@@ -1,0 +1,10 @@
+{
+    "Bot": {
+        "Token": "OTQ1MzUwOTg0NTk3NjM1MTEz.YhO4tg.X-_1HiHtZgk1arCxgX8jL8JAmbM",
+        "ClientID": "945350984597635113",
+        "Prefix": "!"
+    },
+    "Discord": {
+        "TestGuildID": "786972520896921611"
+    }
+}

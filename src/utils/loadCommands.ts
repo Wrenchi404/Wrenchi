@@ -1,7 +1,7 @@
 import path from "path"
 import fs from "fs"
 
-const LoadCommands: Function = () => {
+async function LoadCommands() {
     return new Promise(async (resolve) => {
         let slash = await LoadDirectory("slash");
         let context = await LoadDirectory("context");
@@ -10,7 +10,7 @@ const LoadCommands: Function = () => {
     });
 }
 
-const LoadDirectory: Function = (dir: any) => {
+async function LoadDirectory(dir: any)  {
     return new Promise((resolve) => {
         let commands: any = [];
         let CommandsDir = path.join(__dirname, "..", "commands", dir);
@@ -22,8 +22,8 @@ const LoadDirectory: Function = (dir: any) => {
             if (err) throw err;
             f = files.length;
 
-            files.forEach((file) => {
-                let cmd = require(CommandsDir + "/" + file);
+            files.forEach(async (file) => {
+                let cmd = await import(CommandsDir + "/" + file);
                 i++;
                 if (i == f) r = true;
                 if (!cmd || (dir == "context" && !cmd.command))
