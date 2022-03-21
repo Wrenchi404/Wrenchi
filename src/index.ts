@@ -1,6 +1,6 @@
 import DiscordJS from "discord.js"
-// const Wrenchi = import("./lib/Wrenchi");
-// const client = new Wrenchi();
+// const Wrenchi = new DiscordJS.Client({
+//     intents: 32767,
+// });
 
-// client.build();
-// module.exports = client
+// Wrenchi.login()
