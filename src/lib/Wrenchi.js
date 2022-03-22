@@ -25,7 +25,6 @@ class Wrenchi extends Client {
         super(props);
 
         this.config = require("../data/config")
-
         /**@type {Collection<string, import("./SlashCommand")} */
         this.slashCommands = new Collection();
         this.contextCommands = new Collection();
@@ -38,16 +37,9 @@ class Wrenchi extends Client {
         this.ms = prettyMilliseconds;
     }
 
-    /**
-     * @param {string} text
-     */
-    log(text) {
-        console.log(text);
-    }
-
     build() {
-        this.log("Started the bot...");
-        this.login(this.config.Client.Token);
+        console.log("Started the bot...");
+        console.login(this.config.Client.Token);
 
         let client = this;
 
@@ -74,35 +66,35 @@ class Wrenchi extends Client {
             },
         })
             .on("nodeConnect", (node) =>
-                this.log(
+            console.log(
                     `Node: ${node.options.identifier} | Lavalink node is connected.`
                 )
             )
             .on("nodeReconnect", (node) =>
-                this.log(
+            console.log(
                     `Node: ${node.options.identifier} | Lavalink node is reconnecting.`
                 )
             )
             .on("nodeDestroy", (node) =>
-                this.log(
+            console.log(
                     `Node: ${node.options.identifier} | Lavalink node is destroyed.`
                 )
             )
             .on("nodeDisconnect", (node) =>
-                this.log(
+            console.log(
                     `Node: ${node.options.identifier} | Lavalink node is disconnected.`
                 )
             )
             .on("nodeError", (node, err) =>
-                this.log(
+            console.log(
                     `Node: ${node.options.identifier} | Lavalink node has an error: ${err.message}`
                 )
             )
             .on("trackError", (player, track) =>
-                this.log(`Player: ${player.options.guild} | Track had an error.`)
+            console.log(`Player: ${player.options.guild} | Track had an error.`)
             )
             .on("trackStuck", (player, track, threshold) =>
-                this.log(`Player: ${player.options.guild} | Track is stuck.`)
+            console.log(`Player: ${player.options.guild} | Track is stuck.`)
             )
             .on("playerMove", (player, oldChannel, newChannel) => {
                 const guild = client.guilds.cache.get(player.guild);
@@ -127,7 +119,7 @@ class Wrenchi extends Client {
                 }
             })
             .on("playerCreate", (player) =>
-                this.log(
+            console.log(
                     `Player: ${player.options.guild
                     } | A wild player has been created in ${client.guilds.cache.get(player.options.guild)
                         ? client.guilds.cache.get(player.options.guild).name
@@ -136,7 +128,7 @@ class Wrenchi extends Client {
                 )
             )
             .on("playerDestroy", (player) =>
-                this.log(
+            console.log(
                     `Player: ${player.options.guild
                     } | A wild player has been destroyed in ${client.guilds.cache.get(player.options.guild)
                         ? client.guilds.cache.get(player.options.guild).name
@@ -145,12 +137,12 @@ class Wrenchi extends Client {
                 )
             )
             .on("loadFailed", (node, type, error) =>
-                this.log(
+            console.log(
                     `Node: ${node.options.identifier} | Failed to load ${type}: ${error.message}`
                 )
             )
             .on("trackStart", async (player, track) => {
-                this.log(
+                console.log(
                     `Player: ${player.options.guild
                     } | Track has been started playing [${track.title}]`
                 );
@@ -174,10 +166,10 @@ class Wrenchi extends Client {
                     .send({
                         embeds: [TrackStartedEmbed],
                     })
-                    .catch((err) => this.log(err));
+                    .catch((err) => console.log(err));
             })
             .on("queueEnd", (player) => {
-                this.log(`Player: ${player.options.guild} | Queue has been ended`);
+                console.log(`Player: ${player.options.guild} | Queue has been ended`);
                 let queueEmbed = this.Embed()
                     .setAuthor({
                         name: "The queue has ended",
@@ -206,7 +198,7 @@ class Wrenchi extends Client {
                                     .send({ embeds: [DisconnectedEmbed] });
                                 player.destroy();
                             } else if (player.playing) {
-                                this.log(`Player: ${player.options.guild} | Still playing`);
+                                console.log(`Player: ${player.options.guild} | Still playing`);
                             }
                         }, 1000 * 60 * 2);
                     }
@@ -250,7 +242,7 @@ class Wrenchi extends Client {
                 files.forEach((file) => {
                     const event = require(EventsDir + "/" + file);
                     this.on(file.split(".")[0], event.bind(null, this));
-                    this.log("Event Loaded: " + file.split(".")[0]);
+                    console.log("Event Loaded: " + file.split(".")[0]);
                 });
         });
     }
@@ -270,13 +262,13 @@ class Wrenchi extends Client {
                     let cmd = require(SlashCommandsDirectory + "/" + file);
 
                     if (!cmd || !cmd.run)
-                        return this.log(
+                        return console.log(
                             "Unable to load Command: " +
                             file.split(".")[0] +
                             ", File doesn't have an valid command with run function"
                         );
                     this.slashCommands.set(file.split(".")[0].toLowerCase(), cmd);
-                    this.log("Slash Command Loaded: " + file.split(".")[0]);
+                    console.log("Slash Command Loaded: " + file.split(".")[0]);
                 });
         });
 
@@ -293,13 +285,13 @@ class Wrenchi extends Client {
                 files.forEach((file) => {
                     let cmd = require(ContextCommandsDirectory + "/" + file);
                     if (!cmd.command || !cmd.run)
-                        return this.log(
+                        return console.log(
                             "Unable to load Command: " +
                             file.split(".")[0] +
                             ", File doesn't have either command/run"
                         );
                     this.contextCommands.set(file.split(".")[0].toLowerCase(), cmd);
-                    this.log("ContextMenu Loaded: " + file.split(".")[0]);
+                    console.log("ContextMenu Loaded: " + file.split(".")[0]);
                 });
         });
 
@@ -311,18 +303,18 @@ class Wrenchi extends Client {
         );
         fs.readdir(CommandsDirectory, (err, files) => {
             if (!files.length) return console.log("No legacy commands found.");
-            if (err) this.log(err);
+            if (err) console.log(err);
             else
                 files.forEach((file) => {
                     let command = require(CommandsDirectory + "/" + file);
                     if (!command.name || !command.description || !command.run)
-                        return this.log(
+                        return console.log(
                             "Unable to load Command: " +
                             file.split(".")[0] +
                             ", Reason: File doesn't had run/name/desciption"
                         );
                     this.commands.set(file.split(".")[0].toLowerCase(), command);
-                    this.log("Command Loaded: " + file.split(".")[0]);
+                    console.log("Command Loaded: " + file.split(".")[0]);
                 });
         });
     }
@@ -331,9 +323,9 @@ class Wrenchi extends Client {
         await moongose.connect(this.config.Mongo.MongoURI, {
             keepAlive: true,
         }).then(mongo => {
-            this.log("Connected to " + mongo.connection.name + " Database in MongoDB");
+            console.log("Connected to " + mongo.connection.name + " Database in MongoDB");
         }).catch(err => {
-            this.log("Error while connecting to MongoDB " + err);
+            console.log("Error while connecting to MongoDB " + err);
         });
     }
 
