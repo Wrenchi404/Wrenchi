@@ -11,6 +11,13 @@ const command = new SlashCommand()
             .setRequired(true)
     )
     .setRun(async (client, interaction, options) => {
+        let node = await client.getLavalink(client);
+        if (!node) {
+            return interaction.reply({
+                embeds: [client.ErrorEmbed("Lavalink node is not connected")],
+            });
+        }
+        
         const query = interaction.options.getString("query");
         let channel = await client.getChannel(client, interaction);
         if (!channel) return;
