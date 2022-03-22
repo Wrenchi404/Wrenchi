@@ -39,7 +39,7 @@ class Wrenchi extends Client {
 
     build() {
         console.log("Started the bot...");
-        console.login(this.config.Client.Token);
+        this.login(this.config.Client.Token);
 
         let client = this;
 
