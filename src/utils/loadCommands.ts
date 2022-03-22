@@ -6,11 +6,11 @@ async function LoadCommands() {
         let slash = await LoadDirectory("slash");
         let context = await LoadDirectory("context");
 
-        resolve({ slash, context });
+        return resolve({ slash, context });
     });
 }
 
-async function LoadDirectory(dir: any)  {
+async function LoadDirectory(dir: string)  {
     return new Promise((resolve) => {
         let commands: any = [];
         let CommandsDir = path.join(__dirname, "..", "commands", dir);
@@ -23,7 +23,7 @@ async function LoadDirectory(dir: any)  {
             f = files.length;
 
             files.forEach(async (file) => {
-                let cmd = await import(CommandsDir + "/" + file);
+                let cmd = await import(path.join(CommandsDir, file));
                 i++;
                 if (i == f) r = true;
                 if (!cmd || (dir == "context" && !cmd.command))
