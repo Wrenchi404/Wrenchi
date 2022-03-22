@@ -41,7 +41,7 @@ module.exports = async (client, member) => {
                 inline: true
             },
         ])
-        .setDescription("Make sure to check out <#925277549347627029> before doing anything stoopid")
+        .setDescription("Make sure to check out <#925277549347627029> before doing anything stoopid and get some cool colours in <#949994504948183071>")
         .setFooter({ text: `Proudly Made by Wrench`, iconURL: client.user.displayAvatarURL() })
         .setTimestamp();
 

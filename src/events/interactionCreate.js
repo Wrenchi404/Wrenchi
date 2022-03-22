@@ -119,4 +119,191 @@ module.exports = async (client, interaction) => {
             interaction.channel.delete()
         }
     }
+
+    // Reaction Roles
+
+    if (interaction.message.id === "955856751029264446") {
+        if (interaction.customId === "red_role") {
+            const userRoles = interaction.member.roles.cache.find(x =>
+                x.name === "Blue" ||
+                x.name === "Green" ||
+                x.name === "Orange" ||
+                x.name === "Black"
+            );
+            const redRole = await interaction.guild.roles.cache.find(x => x.name === "Red");
+            const role = await interaction.member.roles.cache.get(redRole.id);
+
+            if (userRoles) {
+                interaction.member.roles.remove(userRoles);
+                await interaction.member.roles.add(redRole);
+                interaction.reply({
+                    content: "Added Red Role",
+                    ephemeral: true
+                });
+            } else {
+                if (role) {
+                    await interaction.member.roles.remove(redRole);
+                    interaction.reply({
+                        content: "Removed Red Role",
+                        ephemeral: true
+                    });
+                } else {
+                    await interaction.member.roles.add(redRole);
+                    interaction.reply({
+                        content: "Added Red Role",
+                        ephemeral: true
+                    });
+                }
+            }
+
+            return
+        }
+
+        if (interaction.customId === "blue_role") {
+            const userRoles = interaction.member.roles.cache.find(x =>
+                x.name === "Red" ||
+                x.name === "Green" ||
+                x.name === "Orange" ||
+                x.name === "Black"
+            );
+
+            const blueRole = interaction.guild.roles.cache.find(x => x.name === "Blue");
+            const role = await interaction.member.roles.cache.get(blueRole.id);
+
+            if (userRoles) {
+                interaction.member.roles.remove(userRoles);
+                await interaction.member.roles.add(blueRole);
+                interaction.reply({
+                    content: "Added Blue Role",
+                    ephemeral: true
+                });
+            } else {
+                if (role) {
+                    await interaction.member.roles.remove(blueRole);
+                    interaction.reply({
+                        content: "Removed Blue Role",
+                        ephemeral: true
+                    });
+                } else {
+                    await interaction.member.roles.add(blueRole);
+                    interaction.reply({
+                        content: "Added Blue Role",
+                        ephemeral: true
+                    });
+                }
+            }
+
+            return
+        }
+
+        if (interaction.customId === "green_role") {
+            const userRoles = interaction.member.roles.cache.find(x =>
+                x.name === "Red" ||
+                x.name === "Blue" ||
+                x.name === "Orange" ||
+                x.name === "Black"
+            );
+
+            const greenRole = interaction.guild.roles.cache.find(x => x.name === "Green");
+            const role = await interaction.member.roles.cache.get(greenRole.id);
+
+            if (userRoles) {
+                interaction.member.roles.remove(userRoles);
+                await interaction.member.roles.add(greenRole);
+                interaction.reply({
+                    content: "Added Green Role",
+                    ephemeral: true
+                });
+            } else {
+                if (role) {
+                    await interaction.member.roles.remove(greenRole);
+                    interaction.reply({
+                        content: "Removed Green Role",
+                        ephemeral: true
+                    });
+                } else {
+                    await interaction.member.roles.add(greenRole);
+                    interaction.reply({
+                        content: "Added Green Role",
+                        ephemeral: true
+                    });
+                }
+            }
+
+            return
+        }
+
+        if (interaction.customId === "orange_role") {
+            const userRoles = interaction.member.roles.cache.find(x =>
+                x.name === "Red" ||
+                x.name === "Blue" ||
+                x.name === "Green" ||
+                x.name === "Black"
+            );
+
+            const orangeRole = interaction.guild.roles.cache.find(x => x.name === "Orange");
+            const role = await interaction.member.roles.cache.get(orangeRole.id);
+
+            if (userRoles) {
+                interaction.member.roles.remove(userRoles);
+                await interaction.member.roles.add(orangeRole);
+                interaction.reply({
+                    content: "Added Orange Role",
+                    ephemeral: true
+                });
+            } else {
+                if (role) {
+                    await interaction.member.roles.remove(orangeRole);
+                    interaction.reply({
+                        content: "Removed Orange Role",
+                        ephemeral: true
+                    });
+                } else {
+                    await interaction.member.roles.add(orangeRole);
+                    interaction.reply({
+                        content: "Added Orange Role",
+                        ephemeral: true
+                    });
+                }
+            }
+
+            return
+        }
+
+        if (interaction.customId === "black_role") {
+            const userRoles = interaction.member.roles.cache.find(x =>
+                x.name === "Red" ||
+                x.name === "Blue" ||
+                x.name === "Green" ||
+                x.name === "Orange"
+            );
+            const blackRole = interaction.guild.roles.cache.find(x => x.name === "Black");
+            const role = await interaction.member.roles.cache.get(blackRole.id);
+
+            if (userRoles) {
+                interaction.member.roles.remove(userRoles);
+                await interaction.member.roles.add(blackRole);
+                interaction.reply({
+                    content: "Added Black Role",
+                    ephemeral: true
+                });
+            } else {
+                if (role) {
+                    await interaction.member.roles.remove(blackRole);
+                    interaction.reply({
+                        content: "Removed Black Role",
+                        ephemeral: true
+                    });
+                } else {
+                    await interaction.member.roles.add(blackRole);
+                    interaction.reply({
+                        content: "Added Black Role",
+                        ephemeral: true
+                    });
+                }
+            }
+
+            return
+        }
+    }
 }

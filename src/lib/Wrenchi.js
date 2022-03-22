@@ -208,7 +208,6 @@ class Wrenchi extends Client {
             });
     }
 
-
     /**
      *
      * @param {string} text
@@ -302,7 +301,6 @@ class Wrenchi extends Client {
             "command"
         );
         fs.readdir(CommandsDirectory, (err, files) => {
-            if (!files.length) return console.log("No legacy commands found.");
             if (err) console.log(err);
             else
                 files.forEach((file) => {
