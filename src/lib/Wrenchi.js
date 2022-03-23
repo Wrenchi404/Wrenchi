@@ -141,33 +141,6 @@ class Wrenchi extends Client {
                     `Node: ${node.options.identifier} | Failed to load ${type}: ${error.message}`
                 )
             )
-            .on("trackStart", async (player, track) => {
-                console.log(
-                    `Player: ${player.options.guild
-                    } | Track has been started playing [${track.title}]`
-                );
-
-                let TrackStartedEmbed = this.Embed()
-                    .setAuthor({ name: "Now playing", iconURL: this.user.displayAvatarURL() })
-                    .setDescription(`[${track.title}](${track.uri})` || "No Descriptions")
-                    .addField("Requested by", `${track.requester}`, true)
-                    .addField(
-                        "Duration",
-                        track.isStream
-                            ? `\`LIVE\``
-                            : `\`${prettyMilliseconds(track.duration, {
-                                colonNotation: true,
-                            })}\``,
-                        true
-                    );
-
-                await client.channels.cache
-                    .get(player.textChannel)
-                    .send({
-                        embeds: [TrackStartedEmbed],
-                    })
-                    .catch((err) => console.log(err));
-            })
             .on("queueEnd", (player) => {
                 console.log(`Player: ${player.options.guild} | Queue has been ended`);
                 let queueEmbed = this.Embed()
@@ -181,7 +154,7 @@ class Wrenchi extends Client {
                     .get(player.textChannel)
                     .send({ embeds: [queueEmbed] });
                 try {
-                    if (!player.playing && !player.twentyFourSeven) {
+                    if (!player.playing) {
                         setTimeout(() => {
                             if (!player.playing && player.state !== "DISCONNECTED") {
                                 let DisconnectedEmbed = new MessageEmbed()

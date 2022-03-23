@@ -71,7 +71,7 @@ const command = new SlashCommand()
                 player.play();
             let embed = client
                 .Embed()
-                .setAuthor({ name: "Added to queue", iconURL: client.user.displayAvatarURL() })
+                .setAuthor({ name: "Added song to queue", iconURL: client.user.displayAvatarURL() })
                 .setDescription(
                     `[${res.tracks[0].title}](${res.tracks[0].uri})` || "No Title"
                 )
