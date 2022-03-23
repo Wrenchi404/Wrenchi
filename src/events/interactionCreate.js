@@ -122,13 +122,16 @@ module.exports = async (client, interaction) => {
 
     // Reaction Roles
 
-    if (interaction.message.id === "955856751029264446") {
+    if (interaction.message.id === "956148745769201676") {
         if (interaction.customId === "red_role") {
             const userRoles = interaction.member.roles.cache.find(x =>
                 x.name === "Blue" ||
                 x.name === "Green" ||
                 x.name === "Orange" ||
-                x.name === "Black"
+                x.name === "Black" ||
+                x.name === "Violet" ||
+                x.name === "Yellow" ||
+                x.name === "Cyan"
             );
             const redRole = await interaction.guild.roles.cache.find(x => x.name === "Red");
             const role = await interaction.member.roles.cache.get(redRole.id);
@@ -164,7 +167,10 @@ module.exports = async (client, interaction) => {
                 x.name === "Red" ||
                 x.name === "Green" ||
                 x.name === "Orange" ||
-                x.name === "Black"
+                x.name === "Black" ||
+                x.name === "Violet" ||
+                x.name === "Yellow" ||
+                x.name === "Cyan"
             );
 
             const blueRole = interaction.guild.roles.cache.find(x => x.name === "Blue");
@@ -201,7 +207,10 @@ module.exports = async (client, interaction) => {
                 x.name === "Red" ||
                 x.name === "Blue" ||
                 x.name === "Orange" ||
-                x.name === "Black"
+                x.name === "Black" ||
+                x.name === "Violet" ||
+                x.name === "Yellow" ||
+                x.name === "Cyan"
             );
 
             const greenRole = interaction.guild.roles.cache.find(x => x.name === "Green");
@@ -238,7 +247,10 @@ module.exports = async (client, interaction) => {
                 x.name === "Red" ||
                 x.name === "Blue" ||
                 x.name === "Green" ||
-                x.name === "Black"
+                x.name === "Black" ||
+                x.name === "Violet" ||
+                x.name === "Yellow" ||
+                x.name === "Cyan"
             );
 
             const orangeRole = interaction.guild.roles.cache.find(x => x.name === "Orange");
@@ -275,7 +287,10 @@ module.exports = async (client, interaction) => {
                 x.name === "Red" ||
                 x.name === "Blue" ||
                 x.name === "Green" ||
-                x.name === "Orange"
+                x.name === "Orange" ||
+                x.name === "Violet" ||
+                x.name === "Yellow" ||
+                x.name === "Cyan"
             );
             const blackRole = interaction.guild.roles.cache.find(x => x.name === "Black");
             const role = await interaction.member.roles.cache.get(blackRole.id);
@@ -298,6 +313,123 @@ module.exports = async (client, interaction) => {
                     await interaction.member.roles.add(blackRole);
                     interaction.reply({
                         content: "Added Black Role",
+                        ephemeral: true
+                    });
+                }
+            }
+
+            return
+        }
+
+        if (interaction.customId === "cyan_role") {
+            const userRoles = interaction.member.roles.cache.find(x =>
+                x.name === "Red" ||
+                x.name === "Blue" ||
+                x.name === "Green" ||
+                x.name === "Orange" ||
+                x.name === "Violet" ||
+                x.name === "Yellow" ||
+                x.name === "Black"
+            );
+            const cyanRole = interaction.guild.roles.cache.find(x => x.name === "Cyan");
+            const role = await interaction.member.roles.cache.get(cyanRole.id);
+
+            if (userRoles) {
+                interaction.member.roles.remove(userRoles);
+                await interaction.member.roles.add(cyanRole);
+                interaction.reply({
+                    content: "Added Cyan Role",
+                    ephemeral: true
+                });
+            } else {
+                if (role) {
+                    await interaction.member.roles.remove(cyanRole);
+                    interaction.reply({
+                        content: "Removed Cyan Role",
+                        ephemeral: true
+                    });
+                } else {
+                    await interaction.member.roles.add(cyanRole);
+                    interaction.reply({
+                        content: "Added Cyan Role",
+                        ephemeral: true
+                    });
+                }
+            }
+
+            return
+        }
+
+        if (interaction.customId === "violet_role") {
+            const userRoles = interaction.member.roles.cache.find(x =>
+                x.name === "Red" ||
+                x.name === "Blue" ||
+                x.name === "Green" ||
+                x.name === "Orange" ||
+                x.name === "Cyan" ||
+                x.name === "Yellow" ||
+                x.name === "Black"
+            );
+            const violetRole = interaction.guild.roles.cache.find(x => x.name === "Violet");
+            const role = await interaction.member.roles.cache.get(violetRole.id);
+
+            if (userRoles) {
+                interaction.member.roles.remove(userRoles);
+                await interaction.member.roles.add(violetRole);
+                interaction.reply({
+                    content: "Added Violet Role",
+                    ephemeral: true
+                });
+            } else {
+                if (role) {
+                    await interaction.member.roles.remove(violetRole);
+                    interaction.reply({
+                        content: "Removed Violet Role",
+                        ephemeral: true
+                    });
+                } else {
+                    await interaction.member.roles.add(violetRole);
+                    interaction.reply({
+                        content: "Added Violet Role",
+                        ephemeral: true
+                    });
+                }
+            }
+
+            return
+        }
+
+        if (interaction.customId === "yellow_role") {
+            const userRoles = interaction.member.roles.cache.find(x =>
+                x.name === "Red" ||
+                x.name === "Blue" ||
+                x.name === "Green" ||
+                x.name === "Orange" ||
+                x.name === "Cyan" ||
+                x.name === "Violet" ||
+                x.name === "Black"
+            );
+            const yellowRole = interaction.guild.roles.cache.find(x => x.name === "Yellow");
+            const role = await interaction.member.roles.cache.get(yellowRole.id);
+
+            if (userRoles) {
+                interaction.member.roles.remove(userRoles);
+                await interaction.member.roles.add(yellowRole);
+                interaction.reply({
+                    content: "Added Yellow Role",
+                    ephemeral: true
+                });
+            } else {
+                if (role) {
+                    await interaction.member.roles.remove(yellowRole);
+                    interaction.reply({
+                        content: "Removed Yellow Role",
+                        ephemeral: true
+                    });
+                } else {
+                    await interaction.member.roles.add(yellowRole);
+                    interaction.reply({
+                        content: "Added Yellow Role",
                         ephemeral: true
                     });
                 }

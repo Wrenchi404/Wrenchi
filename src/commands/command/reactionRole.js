@@ -38,7 +38,25 @@ module.exports = {
                 .setLabel("Black Role")
                 .setStyle("PRIMARY");
 
+            const cyanButton = new MessageButton()
+                .setCustomId("cyan_role")
+                .setEmoji("956145627346133043")
+                .setLabel("Cyan Role")
+                .setStyle("PRIMARY");
+            const violetButton = new MessageButton()
+                .setCustomId("violet_role")
+                .setEmoji("🟪")
+                .setLabel("Violet Role")
+                .setStyle("PRIMARY");
+            const yellowButton = new MessageButton()
+                .setCustomId("yellow_role")
+                .setEmoji("🟨")
+                .setLabel("Yellow Role")
+                .setStyle("PRIMARY");
+
+
             const actionRow = new MessageActionRow().addComponents(redButton, blueButton, greenButton, orangeButton, blackButton);
+            const actionRowTwo = new MessageActionRow().addComponents(cyanButton,violetButton, yellowButton);
 
             const embed = new MessageEmbed()
                 .setColor("AQUA")
@@ -58,19 +76,31 @@ module.exports = {
                         value: "🟦 - To get Blue colour role",
                     },
                     {
+                        name: "Cyan",
+                        value: "<:cyan:956145627346133043> - To get Cyan colour role",
+                    },
+                    {
                         name: "Orange",
                         value: "🟧 - To get Orange colour role",
                     },
                     {
                         name: "Black",
                         value: "◼️ - To get Black colour role",
+                    },
+                    {
+                        name: "Violet",
+                        value: "🟪 - To get Violet colour role",
+                    },
+                    {
+                        name: "Yellow",
+                        value: "🟨 - To get Yellow colour role",
                     }
                 ])
                 .setFooter({ text: "Have fun bro", iconURL: client.user.displayAvatarURL({ format: "png", dynamic: true }) });
 
             message.channel.send({
                 embeds: [embed],
-                components: [actionRow]
+                components: [actionRow, actionRowTwo]
             });
         }
     }

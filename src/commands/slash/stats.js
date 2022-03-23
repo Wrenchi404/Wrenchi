@@ -24,7 +24,7 @@ const command = new SlashCommand()
                 { name: "CPU Name", value: `${cpuName}`, inline: true },
                 { name: "CPU Speed", value: `${cpuSpeed}GHz`, inline: true },
                 { name: "Host Name", value: `${hostname}`, inline: true },
-                { name: "Platform", value: `${platform}`, inline: true },
+                { name: "Platform", value: `${platform ? platform : "Android"}`, inline: true },
                 { name: "Total Memory", value: `${totalMem.toFixed(1) }GB`, inline: true },
                 { name: "Free Memory", value: `${freeMem.toFixed(2)}GB`, inline: true },
                 { name: "Interaction Ping", value: `${msg.createdTimestamp - interaction.createdTimestamp}ms`, inline: true },
