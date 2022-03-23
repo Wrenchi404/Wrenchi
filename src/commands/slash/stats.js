@@ -29,7 +29,6 @@ const command = new SlashCommand()
                 // { name: "Free Memory", value: `${freeMem.toFixed(2)}GB`, inline: true },
                 { name: "Interaction Ping", value: `${msg.createdTimestamp - interaction.createdTimestamp}ms`, inline: true },
                 { name: "Websocket Ping", value: `${client.ws.ping}ms`, inline: true },
-                { name: "Client", value: `${client.user}`, inline: true },
                 { name: "Client ID", value: `${client.user.id}`, inline: true },
                 { name: "Client Avatar", value: `[Avatar URL](${client.user.avatarURL()})`, inline: true },
                 { name: "Client Created At", value: `<t:${Math.floor(client.user.createdTimestamp / 1000) + 3600}:F>`, inline: true },
