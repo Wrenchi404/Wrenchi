@@ -8,12 +8,12 @@ const command = new SlashCommand()
     .setRun(async (client, interaction, options) => {
         const msg = await interaction.reply({ content: "Loading...", fetchReply: true});
         // PC Stats
-        const cpuName = await os.cpus()[0].model;
-        const cpuSpeed = await os.cpus()[0].speed / 1000;
-        const hostname = await os.hostname();
-        const platform = await os.platform();
-        const totalMem = await os.totalmem() / 1000000000;
-        const freeMem = await os.freemem() / 1000000000;
+        const cpuName = await os.cpus()[0].model ? os.cpus()[0].model : "Running in mobile, so I don't know"
+        const cpuSpeed = await os.cpus()[0].speed / 1000 ? os.cpus()[0].speed : "Running in mobile, so I don't know"
+        const hostname = await os.hostname() ? os.hostname() : "Wrench's Mobile"
+        const platform = await os.platform() ? os.platform() : "Android"
+        const totalMem = await os.totalmem() / 1000000000 ? os.totalmem() / 1000000000 : "Running in mobile, so I don't know"
+        const freeMem = await os.freemem() / 1000000000 ? os.freemem() / 1000000000 : "Running in mobile, so I don't know"
 
         const embed = new MessageEmbed()
             .setColor("GREEN")
@@ -24,7 +24,7 @@ const command = new SlashCommand()
                 { name: "CPU Name", value: `${cpuName}`, inline: true },
                 { name: "CPU Speed", value: `${cpuSpeed}GHz`, inline: true },
                 { name: "Host Name", value: `${hostname}`, inline: true },
-                { name: "Platform", value: `${platform ? platform : "Android"}`, inline: true },
+                { name: "Platform", value: `${platform}`, inline: true },
                 { name: "Total Memory", value: `${totalMem.toFixed(1) }GB`, inline: true },
                 { name: "Free Memory", value: `${freeMem.toFixed(2)}GB`, inline: true },
                 { name: "Interaction Ping", value: `${msg.createdTimestamp - interaction.createdTimestamp}ms`, inline: true },
