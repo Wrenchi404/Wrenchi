@@ -3,7 +3,7 @@ const { Routes } = require("discord-api-types/v9");
 const LoadCommands = require("../utils/loadCommands");
 
 (async () => {
-    const config = require("../data/config");
+    const config = require("../../data/config");
     const rest = new REST({ version: "9" }).setToken(config.Client.Token);
     const commands = await LoadCommands().then((cmds) => {
         return [].concat(cmds.slash).concat(cmds.context);

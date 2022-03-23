@@ -9,7 +9,7 @@ const rl = readline.createInterface({
 });
 
 (async () => {
-    const config = require("../Data/config")
+    const config = require("../../data/config");
     const rest = new REST({ version: "9" }).setToken(config.Client.Token);
 
     rl.question(

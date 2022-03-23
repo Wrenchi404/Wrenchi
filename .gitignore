@@ -1,0 +1,14 @@
+/archive
+/node_modules
+/.vs
+/obj
+/logs
+/bin
+package-lock.json
+lavalink.bat
+lavalink.jar
+Dedsec.sin
+Dedsec.njsproj
+.gitattributes
+DedSec.sln
+/data

@@ -24,7 +24,7 @@ class Wrenchi extends Client {
     ) {
         super(props);
 
-        this.config = require("../data/config")
+        this.config = require("../../data/config")
         /**@type {Collection<string, import("./SlashCommand")} */
         this.slashCommands = new Collection();
         this.contextCommands = new Collection();
