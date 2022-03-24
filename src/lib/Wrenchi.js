@@ -160,6 +160,7 @@ class Wrenchi extends Client {
                 client.channels.cache
                     .get(player.textChannel)
                     .send({ embeds: [queueEmbed] });
+                client.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
 
                 try {
                     if (!player.playing) {
@@ -178,13 +179,17 @@ class Wrenchi extends Client {
                                     .get(player.textChannel)
                                     .send({ embeds: [DisconnectedEmbed] });
                                 player.destroy();
+
+                                client.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
                             } else if (player.playing) {
                                 console.log(`Player: ${player.options.guild} | Still playing`);
+                                client.user.setPresence({ activities: [{ name: `To ${player.queue.current.title}`, type: "LISTENING" }], status: "dnd" });
                             }
                         }, 1000 * 60 * 2);
                     }
                 } catch (err) {
                     console.log(err)
+                    client.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
                 }
             });
     }
