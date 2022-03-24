@@ -17,7 +17,7 @@ const HandlerError = (client) => {
             .setDescription(`${reason}`)
             .setTimestamp();
 
-        client.channels.cache.get("944242282834559086").send({ embeds: [errorEmbed] })
+        client.channels.cache.get("944242282834559086").send({ embeds: [errorEmbed] });
     });
 
     process.on("uncaughtException", (error, origin) => {

@@ -7,11 +7,11 @@ const { Manager } = require("erela.js");
 const getLavalink = require("../utils/getLavalink");
 const getChannel = require("../utils/getChannel");
 const handleError = require("../utils/handleError");
-const Spotify = require("erela.js-spotify");
 const moongose = require("mongoose");
 const prettyMilliseconds = require("pretty-ms");
 const fs = require("fs");
 const path = require("path");
+const filters = require("erela.js-filters");
 
 class Wrenchi extends Client {
     /**
@@ -19,7 +19,7 @@ class Wrenchi extends Client {
      */
     constructor(
         props = {
-            intents: 32767,
+            intents: 32767
         }
     ) {
         super(props);
@@ -45,10 +45,7 @@ class Wrenchi extends Client {
 
         this.Manager = new Manager({
             plugins: [
-                new Spotify({
-                    clientID: this.config.Spotify.ClientID,
-                    clientSecret: this.config.Spotify.ClientSecret
-                })
+                new filters()
             ],
             nodes: [
                 {
@@ -57,7 +54,7 @@ class Wrenchi extends Client {
                     port: this.config.Lavalink.Port,
                     password: this.config.Lavalink.Password,
                     retryAmount: this.config.Lavalink.RetryAmount,
-                    retryDelay: this.config.Lavalink.RetryDelay
+                    retryDelay: this.config.Lavalink.RetryDelay,
                 },
             ],
             send: (id, payload) => {
