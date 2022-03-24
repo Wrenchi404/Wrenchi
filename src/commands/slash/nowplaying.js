@@ -1,7 +1,5 @@
 const SlashCommand = require("../../lib/SlashCommand");
 const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js");
-const prettyMilliseconds = require("pretty-ms");
-const wait = require('node:timers/promises').setTimeout;
 const ytdl = require("ytdl-core");
 
 const command = new SlashCommand()
@@ -66,6 +64,34 @@ const command = new SlashCommand()
 
         const basicRow = new MessageActionRow().addComponents(prevButton, pauseButton, stopButton, resumeButton, nextButton);
 
+        const seekLeftButton = new MessageButton()
+            .setCustomId("seek_left_button")
+            .setEmoji("⏪")
+            .setStyle("PRIMARY");
+
+        const trackRepButton = new MessageButton()
+            .setCustomId("track_rep_button")
+            .setEmoji("🔂")
+            .setStyle("PRIMARY");
+
+        const repeatButton = new MessageButton()
+            .setCustomId("repeat_button")
+            .setLabel("Repeat")
+            .setDisabled(true)
+            .setStyle("SECONDARY");
+
+        const queueRepButton = new MessageButton()
+            .setCustomId("queue_rep_button")
+            .setEmoji("🔁")
+            .setStyle("PRIMARY");
+
+        const seekRightButton = new MessageButton()
+            .setCustomId("seek_right_button")
+            .setEmoji("⏩")
+            .setStyle("PRIMARY");
+
+        const repeatRow = new MessageActionRow().addComponents(seekLeftButton, trackRepButton, repeatButton, queueRepButton, seekRightButton);
+
         let embed = new MessageEmbed();
         embed.setColor("RANDOM")
         embed.setTitle("Now playing")
@@ -112,7 +138,7 @@ const command = new SlashCommand()
 
         await interaction.deferReply({ fetchReply: true });
         await new Promise((resolve) => setTimeout(resolve, 5000));
-        const npMsg = await interaction.editReply({ content: "This is what's playin now my boy", embeds: [embed], components: [basicRow] });
+        const npMsg = await interaction.editReply({ content: "This is what's playin now my boy", embeds: [embed], components: [basicRow, repeatRow] });
         const filter = (inter) => inter.user.id === interaction.user.id;
         const collector = await interaction.channel.createMessageComponentCollector({
             filter: filter,
@@ -176,7 +202,7 @@ const command = new SlashCommand()
                         newEmbed.setThumbnail(nowSong.displayThumbnail("maxresdefault"))
                         newEmbed.setDescription(`[${nowSong.title}](${nowSong.uri})`);
 
-                        await npMsg.edit({ embeds: [newEmbed], components: [basicRow] });
+                        await npMsg.edit({ embeds: [newEmbed], components: [basicRow, repeatRow] });
                     });
                 } catch {
                     inter.reply({
@@ -296,7 +322,77 @@ const command = new SlashCommand()
                     nextEmbed.setThumbnail(nowSong.displayThumbnail("maxresdefault"))
                     nextEmbed.setDescription(`[${nowSong.title}](${nowSong.uri})`);
 
-                    await npMsg.edit({ content: null, embeds: [nextEmbed], components: [basicRow] });
+                    await npMsg.edit({ content: null, embeds: [nextEmbed], components: [basicRow, repeatButton] });
+                });
+            }
+
+            if (inter.customId === "track_rep_button") {
+                if (player.trackRepeat) {
+                    player.setTrackRepeat(false);
+                    inter.reply({
+                        content: "Track Repeat is now off",
+                        ephemeral: true
+                    });
+
+                    return
+                }
+
+                player.setTrackRepeat(true)
+                inter.reply({
+                    content: "Track Repeat is now on",
+                    ephemeral: true
+                });
+            }
+
+            if (inter.customId === "queue_rep_button") {
+                if (player.queueRepeat) {
+                    player.setQueueRepeat(false);
+                    inter.reply({
+                        content: "Queue Repeat is now off",
+                        ephemeral: true
+                    });
+
+                    return
+                }
+
+                player.setQueueRepeat(true)
+                inter.reply({
+                    content: "Queue Repeat is now on",
+                    ephemeral: true
+                });
+            }
+
+            if (inter.customId === "seek_left_button") {
+                if (player.position > 10000) {
+                    await player.seek(player.position - 10000);
+                    inter.reply({
+                        content: "Seeked to da left",
+                        ephemeral: true
+                    });
+                    return
+                }
+
+                await player.seek(0);
+                return inter.reply({
+                    content: "Seeked to da left",
+                    ephemeral: true
+                });
+            }
+
+            if (inter.customId === "seek_right_button") {
+                if (player.position < player.queue.current.duration - 10000) {
+                    await player.seek(player.position + 10000);
+                    inter.reply({
+                        content: "Seeked to da right",
+                        ephemeral: true
+                    });
+                    return
+                }
+
+                await player.seek(player.queue.current.duration);
+                return inter.reply({
+                    content: "Seeked to da right",
+                    ephemeral: true
                 });
             }
         });
