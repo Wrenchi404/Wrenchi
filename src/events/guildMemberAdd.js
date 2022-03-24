@@ -10,6 +10,8 @@ module.exports = async (client, member) => {
     const channel = client.channels.cache.get(client.config.Discord.WelcomeChannelID);
     if (!channel) return;
 
+    await member.roles.add(client.config.Discord.MemberRoleID);
+
     const welcomeEmbed = new MessageEmbed()
         .setAuthor({ name: `${member.user.username} Joined Our HideOut!!`, iconURL: member.displayAvatarURL() })
         .setColor("BLUE")

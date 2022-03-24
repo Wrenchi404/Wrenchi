@@ -337,7 +337,7 @@ const command = new SlashCommand()
                     return
                 }
 
-                player.setTrackRepeat(true)
+                player.setTrackRepeat(true);
                 inter.reply({
                     content: "Track Repeat is now on",
                     ephemeral: true
