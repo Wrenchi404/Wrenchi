@@ -66,36 +66,41 @@ class Wrenchi extends Client {
             },
         })
             .on("nodeConnect", (node) =>
-            console.log(
+                console.log(
                     `Node: ${node.options.identifier} | Lavalink node is connected.`
                 )
             )
             .on("nodeReconnect", (node) =>
-            console.log(
+                console.log(
                     `Node: ${node.options.identifier} | Lavalink node is reconnecting.`
                 )
             )
             .on("nodeDestroy", (node) =>
-            console.log(
+                console.log(
                     `Node: ${node.options.identifier} | Lavalink node is destroyed.`
                 )
             )
             .on("nodeDisconnect", (node) =>
-            console.log(
+                console.log(
                     `Node: ${node.options.identifier} | Lavalink node is disconnected.`
                 )
             )
             .on("nodeError", (node, err) =>
-            console.log(
+                console.log(
                     `Node: ${node.options.identifier} | Lavalink node has an error: ${err.message}`
                 )
             )
-            .on("trackError", (player, track) =>
-            console.log(`Player: ${player.options.guild} | Track had an error.`)
-            )
-            .on("trackStuck", (player, track, threshold) =>
-            console.log(`Player: ${player.options.guild} | Track is stuck.`)
-            )
+            .on("trackError", (player, track) => {
+                console.log(`Player: ${player.options.guild} | Track had an error.`)
+                client.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
+            })
+            .on("trackStuck", (player, track, threshold) => {
+                console.log(`Player: ${player.options.guild} | Track is stuck.`)
+                client.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
+            })
+            .on("trackStart", (player, track) => {
+                client.user.setPresence({ activities: [{ name: `To ${track.title}`, type: "LISTENING" }], status: "dnd" });
+            })
             .on("playerMove", (player, oldChannel, newChannel) => {
                 const guild = client.guilds.cache.get(player.guild);
                 if (!guild) return;
@@ -119,7 +124,7 @@ class Wrenchi extends Client {
                 }
             })
             .on("playerCreate", (player) =>
-            console.log(
+                console.log(
                     `Player: ${player.options.guild
                     } | A wild player has been created in ${client.guilds.cache.get(player.options.guild)
                         ? client.guilds.cache.get(player.options.guild).name
@@ -127,17 +132,19 @@ class Wrenchi extends Client {
                     }`
                 )
             )
-            .on("playerDestroy", (player) =>
-            console.log(
+            .on("playerDestroy", (player) => {
+                console.log(
                     `Player: ${player.options.guild
                     } | A wild player has been destroyed in ${client.guilds.cache.get(player.options.guild)
                         ? client.guilds.cache.get(player.options.guild).name
                         : "a guild"
                     }`
-                )
-            )
+                );
+
+                client.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
+            })
             .on("loadFailed", (node, type, error) =>
-            console.log(
+                console.log(
                     `Node: ${node.options.identifier} | Failed to load ${type}: ${error.message}`
                 )
             )
@@ -153,6 +160,7 @@ class Wrenchi extends Client {
                 client.channels.cache
                     .get(player.textChannel)
                     .send({ embeds: [queueEmbed] });
+
                 try {
                     if (!player.playing) {
                         setTimeout(() => {

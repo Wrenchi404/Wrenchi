@@ -69,8 +69,7 @@ const command = new SlashCommand()
             player.queue.add(res.tracks[0]);
             if (!player.playing && !player.paused && !player.queue.size)
                 player.play();
-            let embed = client
-                .Embed()
+            let embed = client.Embed()
                 .setAuthor({ name: "Added song to queue", iconURL: client.user.displayAvatarURL() })
                 .setDescription(
                     `[${res.tracks[0].title}](${res.tracks[0].uri})` || "No Title"
