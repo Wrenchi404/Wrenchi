@@ -8,6 +8,16 @@ const command = new SlashCommand()
     .setDescription("Shows the current queue")
 
     .setRun(async (client, interaction, options) => {
+        let channel = await client.getChannel(client, interaction);
+        if (!channel) return;
+
+        let node = await client.getLavalink(client);
+        if (!node) {
+            return interaction.reply({
+                embeds: [client.ErrorEmbed("Lavalink node is not connected")],
+            });
+        }
+        
         let player = client.Manager.players.get(interaction.guild.id);
         if (!player) {
             const queueEmbed = new MessageEmbed()
