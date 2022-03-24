@@ -1,11 +1,12 @@
 const SlashCommand = require("../../lib/SlashCommand");
 const { MessageEmbed } = require("discord.js");
+const { APIVersion } = require("discord-api-types/v9")
 
 const command = new SlashCommand()
     .setName("stats")
     .setDescription("Stats of myself")
     .setRun(async (client, interaction, options) => {
-        const msg = await interaction.reply({ content: "Loading...", fetchReply: true});
+        const msg = await interaction.reply({ content: "Loading...", fetchReply: true });
 
         const embed = new MessageEmbed()
             .setColor("GREEN")
@@ -13,7 +14,8 @@ const command = new SlashCommand()
             .setThumbnail(client.user.displayAvatarURL({ format: "png", dynamic: true }))
             .setFields([
                 { name: "Owner", value: "Wrench#0012" },
-                { name: "Discord.js Version", value: `v${require("discord.js").version}` },
+                { name: "Discord.js Version", value: `v${require("discord.js").version}`, inline: true },
+                { name: "Discord API Version", value: `v${APIVersion}`, inline: true },
                 { name: "Interaction Ping", value: `${msg.createdTimestamp - interaction.createdTimestamp}ms`, inline: true },
                 { name: "Websocket Ping", value: `${client.ws.ping}ms`, inline: true },
                 { name: "Client Avatar", value: `[Avatar URL](${client.user.avatarURL()})`, inline: true },
