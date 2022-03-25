@@ -1,0 +1,3 @@
+echo Let's Destroy....
+
+npm run destroy

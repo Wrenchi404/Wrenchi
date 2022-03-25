@@ -1,7 +1,7 @@
 {
   "name": "wrenchi",
-  "version": "2.0.0",
-  "description": "Wrenchi404",
+  "version": "2.0.1",
+  "description": "Wrenchi, Imagine a bot made by Discord.JS",
   "main": "./src/index.js",
   "scripts": {
     "deploy": "node ./src/deploy/guild && node .",
@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/WrenchWD/Wrenchi.git"
   },
-  "author": "Wrench, Andrew",
+  "author": "Wrench & Andrew",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/WrenchWD/Wrenchi/issues"
@@ -24,7 +24,6 @@
     "discord.js": "^13.6.0",
     "erela.js": "^2.3.3",
     "erela.js-filters": "^1.2.7",
-    "erela.js-spotify": "^1.2.0",
     "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
     "mongoose": "^6.1.9",
