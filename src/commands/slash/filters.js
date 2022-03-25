@@ -88,33 +88,20 @@ const command = new SlashCommand()
 
         collector.on("collect", async (inter) => {
             if (inter.customId === "nc_button") {
-                if (player.nightcore = false) {
-                    player.nightcore = true;
-
-                    const filterEmbed = new MessageEmbed()
-                        .setColor("#0099ff")
-                        .setTitle("Filters")
-                        .setDescription("Disabled **NightCore** filter to the song.")
-                        .setTimestamp();
-
-                    await inter.reply({ embeds: [filterEmbed], ephemeral: true });
-                    return
+                if (player.nightcore) {
+                    player.nightcore = false
+                    await inter.reply({ content: "Disabled **Nightcore** filter.", ephemeral: true });
+                } else {
+                    player.nightcore = true
+                    await inter.reply({ content: "Enabled **Nightcore** filter.", ephemeral: true });
                 }
-
-                player.nightcore = true
-                const filterEmbed = new MessageEmbed()
-                    .setColor("#0099ff")
-                    .setTitle("Filters")
-                    .setDescription("Applied **NightCore** filter to the song.")
-                    .setTimestamp();
-                await inter.reply({ embeds: [filterEmbed] });
             }
 
             if (inter.customId === "diable_eq_button") {
                 player.reset();
-                inter.reply({ content: "Removed every filters" });
-                
-                setTimeout(() => {
+                inter.reply({ content: "Removed every filters", ephemeral: true });
+
+                setTimeout(async () => {
                     inter.message.delete();
                 }, 3000);
             }
