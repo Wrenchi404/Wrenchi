@@ -1,5 +1,5 @@
 const Wrenchi = require("../lib/Wrenchi");
-const { Message, MessageEmbed } = require("discord.js");
+const { Message } = require("discord.js");
 
 /**
  *
@@ -22,19 +22,5 @@ module.exports = async (client, message) => {
         return
     } else {
         command.run(client, message, args);
-    }
-
-    const mention = new RegExp(`^<@!?${client.user.id}>( |)$`);
-
-    if (message.content.match(mention)) {
-        const mentionEmbed = new MessageEmbed()
-            .setColor(client.config.embedColor)
-            .setDescription(
-                `Hi`
-            );
-
-        message.channel.send({
-            embeds: [mentionEmbed],
-        });
     }
 }
