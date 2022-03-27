@@ -19,7 +19,10 @@ class Wrenchi extends Client {
      */
     constructor(
         props = {
-            intents: 32767
+            intents: 32767,
+            allowedMentions: {
+                parse: ['users', 'roles']
+            }
         }
     ) {
         super(props);
