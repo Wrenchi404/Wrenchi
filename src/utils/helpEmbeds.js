@@ -11,7 +11,8 @@ const modEmbed = new MessageEmbed()
     .setTitle("Moderation Commands")
     .setColor("RANDOM")
     .setDescription("`kick` Kicks a user \n\n \
-    `ban` Bans a user \
+    `ban` Bans a user \n\n \
+    `unban` Unban a guy \
 ")
 
 const musicEmbed = new MessageEmbed()
@@ -24,17 +25,14 @@ const musicEmbed = new MessageEmbed()
     `skip` Skips the current song \n\n \
     `queue` Shows the current queue \n\n \
     `volume` Sets the volume of the current song \n\n \
-    `nowplaying` Shows the current song \
+    `nowplaying` Shows the current song \n\n \
+    `filters` Let's filter the song \
 ")
 
 const economyEmbed = new MessageEmbed()
     .setTitle("Economy Commands")
     .setColor("RANDOM")
-    .setDescription("`profile` Show's yours or someone else's profile | If you don't have a profile you can create one with this command \n\n \
-    `withdraw` Withdraws money from your account \n\n \
-    `deposit` Deposits money into your account \n\n \
-    `pay` Pays someone else \
-")
+    .setDescription("Coming soon...")
 
 module.exports = {
     funEmbed,
@@ -42,3 +40,10 @@ module.exports = {
     musicEmbed,
     economyEmbed
 }
+
+/* 
+`profile` Show's yours or someone else's profile | If you don't have a profile you can create one with this command \n\n \
+    `withdraw` Withdraws money from your account \n\n \
+    `deposit` Deposits money into your account \n\n \
+    `pay` Pays someone else \
+*/
