@@ -76,22 +76,14 @@ const command = new SlashCommand()
                 )
                 .setURL(res.tracks[0].uri)
                 .addField("Author", res.tracks[0].author, true)
-                .addField(
-                    "Duration",
-                    res.tracks[0].isStream
-                        ? `\`LIVE\``
-                        : `\`${client.ms(res.tracks[0].duration, {
-                            colonNotation: true,
-                        })}\``,
-                    true
-                );
+                .addField("Duration", await convertDuration(res.tracks[0].duration), true);
             try {
                 embed.setThumbnail(res.tracks[0].displayThumbnail("maxresdefault"));
             } catch (err) {
                 embed.setThumbnail(res.tracks[0].thumbnail);
             }
             if (player.queue.totalSize > 1)
-            embed.addField("Position in queue", `${player.queue.size - 0}`, true);
+                embed.addField("Position in queue", `${player.queue.size - 0}`, true);
             return interaction.editReply({ embeds: [embed] }).catch((err) => client.log(err));
         }
 
@@ -114,13 +106,23 @@ const command = new SlashCommand()
                 .addField("Enqueued", `\`${res.tracks.length}\` songs`, false)
                 .addField(
                     "Playlist duration",
-                    `\`${client.ms(res.playlist.duration, {
-                        colonNotation: true,
-                    })}\``,
+                    await convertDuration(res.playlist.duration),
                     false
                 );
             return interaction.editReply({ embeds: [embed] }).catch((err) => client.log(err));
         }
     });
+
+async function convertDuration(value) {
+    var sec = parseInt(value, 10);
+    sec = sec / 1000;
+    let hours = Math.floor(sec / 3600);
+    let minutes = Math.floor((sec - (hours * 3600)) / 60);
+    let seconds = Math.round(sec - (hours * 3600) - (minutes * 60));
+    if (hours < 10) { hours = "0" + hours; }
+    if (minutes < 10) { minutes = "0" + minutes; }
+    if (seconds < 10) { seconds = "0" + seconds; }
+    return hours + ':' + minutes + ':' + seconds;
+}
 
 module.exports = command;
