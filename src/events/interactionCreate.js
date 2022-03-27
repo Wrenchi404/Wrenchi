@@ -34,10 +34,6 @@ module.exports = async (client, interaction) => {
 
     if (!interaction.isButton()) return
 
-    const ticketSetup = await TicketSetup.findOne({
-        messageID: interaction.message.id
-    });
-
     if (interaction.message.id === "957582710308737028") {
         if (interaction.customId === "ticket_button") {
             const ticket = await TicketSchema.findOne({
