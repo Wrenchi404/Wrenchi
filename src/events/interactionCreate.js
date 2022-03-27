@@ -1,7 +1,7 @@
 const Wrenchi = require("../lib/Wrenchi");
 const DiscordJS = require("discord.js");
 const TicketSchema = require("../models/ticket/TicketSchema");
-const TicketSetup = require("../models/ticket/TicketMessageSchema");
+const TicketSetup = require("../models/ticket/TicketSetupSchema");
 /**
  *
  * @param {Wrenchi} client
@@ -34,12 +34,12 @@ module.exports = async (client, interaction) => {
 
     if (!interaction.isButton()) return
 
-    const ticketSetup = TicketSetup.findOne({
+    const ticketSetup = await TicketSetup.findOne({
         messageID: interaction.message.id
     });
 
-    if (interaction.message.id !== ticketSetup) {
-        if (interaction.customId === "open_ticket") {
+    if (interaction.message.id === "957582710308737028") {
+        if (interaction.customId === "ticket_button") {
             const ticket = await TicketSchema.findOne({
                 username: interaction.user.username,
                 userID: interaction.user.id,
