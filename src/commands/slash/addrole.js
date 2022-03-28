@@ -5,6 +5,7 @@ const command = new SlashCommand()
     .setName("addrole")
     .setDescription("Pause's the music")
     .addRoleOption((option) => option.setName("role").setDescription("Mention the role you want to add.").setRequired(true))
+    .addMentionableOption((option) => option.setName("user").setDescription("The user whom you want to add role.").setRequired(false))
     .setRun(async (client, interaction, options) => {
         if (!interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
             interaction.reply({
@@ -19,6 +20,16 @@ const command = new SlashCommand()
         const role = interaction.options.getRole("role");
         if (!role) return;
 
+        const member = interaction.options.getMentionable("user")
+        if (member) {
+            member.roles.add(role.id);
+            interaction.reply({
+                content: `Added ${role.name} to ${member}`
+            });
+
+            return
+        }
+
         await interaction.guild.members.fetch({ force: true }).then((members) => {
             members.forEach((member) => {
                 if (member.user.bot) return;
@@ -30,8 +41,7 @@ const command = new SlashCommand()
             })
         }).then(() => {
             interaction.reply({
-                content: `Added <@&${role.id}> to ${addedMembers.length} members.`,
-                allowedMentions: false
+                content: `Added ${role.name} to ${addedMembers.length} members.`
             });
         })
     });
