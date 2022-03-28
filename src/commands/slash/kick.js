@@ -15,6 +15,15 @@ const command = new SlashCommand()
         const member = interaction.guild.members.cache.get(mention.id);
         if (!member) return;
 
+        if (interaction.member.roles.highest.position <= member.roles.highest.position) {
+            interaction.reply({
+                content: "You don't have permission to use this command.",
+                ephemeral: true
+            });
+
+            return
+        }
+
         if (member.kickable) {
             member.kick(reason);
             interaction.reply({ content: `${member.user.tag} has been kicked for ${reason}` });

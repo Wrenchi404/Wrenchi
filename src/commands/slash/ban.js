@@ -16,6 +16,15 @@ const command = new SlashCommand()
             const member = interaction.guild.members.cache.get(mention.id);
             if (!member) return interaction.reply({ content: "No user found!" })
 
+            if (interaction.member.roles.highest.position <= member.roles.highest.position) {
+                interaction.reply({
+                    content: "You don't have permission to use this command.",
+                    ephemeral: true
+                });
+
+                return
+            }
+
             if (member.bannable) {
                 member.ban({
                     reason: reason

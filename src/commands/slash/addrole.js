@@ -3,7 +3,7 @@ const { MessageEmbed, Permissions } = require("discord.js");
 
 const command = new SlashCommand()
     .setName("addrole")
-    .setDescription("Pause's the music")
+    .setDescription("Add a role to a user.")
     .addRoleOption((option) => option.setName("role").setDescription("Mention the role you want to add.").setRequired(true))
     .addMentionableOption((option) => option.setName("user").setDescription("The user whom you want to add role.").setRequired(false))
     .setRun(async (client, interaction, options) => {

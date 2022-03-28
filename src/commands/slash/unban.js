@@ -1,7 +1,6 @@
 const SlashCommand = require("../../lib/SlashCommand");
 const { MessageEmbed, Permissions } = require("discord.js");
 
-//no params?
 const command = new SlashCommand()
     .setName("unban")
     .setDescription("Have mercy my boy.")
@@ -20,7 +19,5 @@ const command = new SlashCommand()
         guild.members.unban(id).catch(err => console.log(err.message));
         return interaction.reply({ content: "Thanks for showing mercy!" })
     });
-
-// 2 biggest frnds are here ;-;
 
 module.exports = command;
