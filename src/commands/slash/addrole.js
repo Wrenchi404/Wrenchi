@@ -22,11 +22,16 @@ const command = new SlashCommand()
 
         const member = interaction.options.getMentionable("user")
         if (member) {
-            member.roles.add(role.id);
-            interaction.reply({
-                content: `Added ${role.name} to ${member}`
-            });
-
+            if (!member.roles.cache.has(role.id)) {
+                member.roles.add(role.id);
+                interaction.reply({
+                    content: `Added ${role.name} to ${member}`
+                });
+            } else {
+                interaction.reply({
+                    content: `${member} already has ${role.name} role.`
+                });
+            }
             return
         }
 
