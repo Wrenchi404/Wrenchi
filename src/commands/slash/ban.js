@@ -13,7 +13,7 @@ const command = new SlashCommand()
         if (!reason) return;
 
         const member = interaction.guild.members.cache.get(mention.id);
-        if (!member) return;
+        if (!member) return interaction.reply({ content: "No user found!" })
 
         if (member.bannable) {
             member.ban({

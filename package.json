@@ -24,6 +24,7 @@
     "discord.js": "^13.6.0",
     "erela.js": "^2.3.3",
     "erela.js-filters": "^1.2.7",
+    "express": "^4.17.3",
     "fs": "^0.0.1-security",
     "lodash": "^4.17.21",
     "mongoose": "^6.1.9",
