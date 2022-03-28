@@ -28,7 +28,9 @@ const command = new SlashCommand()
 
         role.delete();
 
-        interaction.reply({})
+        interaction.reply({
+            content: `Deleted ${role.name} role.`
+        })
     });
 
 module.exports = command;
