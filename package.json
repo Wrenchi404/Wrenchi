@@ -26,8 +26,10 @@
     "erela.js-filters": "^1.2.7",
     "express": "^4.17.3",
     "fs": "^0.0.1-security",
+    "i": "^0.3.7",
     "lodash": "^4.17.21",
     "mongoose": "^6.1.9",
+    "npm": "^8.5.5",
     "pretty-ms": "^7.0.1",
     "ytdl-core": "^4.11.0"
   }
