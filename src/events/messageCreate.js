@@ -14,10 +14,8 @@ module.exports = async (client, message) => {
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift().toLowerCase();
 
-    // Searching a command
     const command = client.commands.get(commandName) || client.commands.find((x) => x.aliases && x.aliases.includes(commandName));
 
-    // Executing the codes when we get the command or aliases
     if (!command) {
         return
     } else {
