@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, WebhookClient } = require("discord.js");
 
 /**
     * @param {import("../lib/Wrenchi")} client 
@@ -6,6 +6,7 @@ const { MessageEmbed } = require("discord.js");
 
 const HandlerError = (client) => {
     console.log("Started handling errors");
+    const webhook = new WebhookClient({ url: client.config.Webhooks.ErrorLogger });
 
     process.on("unhandledRejection", (reason, promise) => {
         console.log(`❌ | [Error] Unhandled Rejection: `);
@@ -17,7 +18,7 @@ const HandlerError = (client) => {
             .setDescription(`${reason}`)
             .setTimestamp();
 
-        client.channels.cache.get("944242282834559086").send({ embeds: [errorEmbed] });
+        webhook.send({ embeds: [errorEmbed] });
     });
 
     process.on("uncaughtException", (error, origin) => {
@@ -30,7 +31,7 @@ const HandlerError = (client) => {
             .setDescription(`${error} \n\n ${origin.toString()}`)
             .setTimestamp()
 
-        client.channels.cache.get("944242282834559086").send({ embeds: [errorEmbed] })
+        webhook.send({ embeds: [errorEmbed] });
     });
 
     process.on("uncaughtExceptionMonitor", (error, origin) => {
@@ -43,7 +44,7 @@ const HandlerError = (client) => {
             .setDescription(`${error} \n\n ${origin.toString()}`)
             .setTimestamp()
 
-        client.channels.cache.get("944242282834559086").send({ embeds: [errorEmbed] })
+        webhook.send({ embeds: [errorEmbed] });
     });
 }
 
