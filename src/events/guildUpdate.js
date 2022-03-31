@@ -23,8 +23,8 @@ module.exports = async (client, before, after) => {
     if (before.description !== after.description) {
         const embed = new MessageEmbed()
             .setTitle("Guild Description Changed")
-            .addField("Old description", before.description)
-            .addField("New description", after.description)
+            .addField("Old description", `${before.description.toString()}`)
+            .addField("New description", `${after.description.toString()}`)
             .setColor("RED")
             .setTimestamp()
             .setFooter({ text: `${client.user.tag}`, iconURL: client.user.displayAvatarURL() });
