@@ -20,8 +20,10 @@ const command = new SlashCommand()
         const role = interaction.options.getRole("role");
         if (!role) return;
 
-        const member = interaction.options.getMentionable("user")
+        const member = interaction.options.getMentionable("user");
         if (member) {
+            if (role.rawPosition >= member.roles.highest.rawPosition && member.id !== interaction.guild.ownerId) return interaction.reply({ content: "You can't add a role that is higher than your highest role.", ephemeral: true });
+
             if (!member.roles.cache.has(role.id)) {
                 member.roles.add(role.id);
                 interaction.reply({
