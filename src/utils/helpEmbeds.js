@@ -12,7 +12,9 @@ const modEmbed = new MessageEmbed()
     .setColor("RANDOM")
     .setDescription("`kick` Kicks a user \n\n \
     `ban` Bans a user \n\n \
-    `unban` Unban a guy \
+    `unban` Unban a guy \n\n \
+    `addrole` Adds a role to a user \n\n \
+    `deleterole` Deletes a role in the guild \n\n \
 ")
 
 const musicEmbed = new MessageEmbed()
