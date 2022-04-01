@@ -6,7 +6,6 @@ const pms = require("pretty-ms");
 const command = new SlashCommand()
     .setName("queue")
     .setDescription("Shows the current queue")
-
     .setRun(async (client, interaction, options) => {
         let channel = await client.getChannel(client, interaction);
         if (!channel) return;

@@ -34,7 +34,7 @@ const command = new SlashCommand()
                     await dm.send({
                         content: `You have been banned from ${interaction.guild.name} for ${reason}`
                     });
-                })
+                });
                 interaction.reply({ content: `${member.user.tag} has been banned for ${reason}` });
             } else {
                 interaction.reply({ content: `${member.user.tag} cannot be banned.` });

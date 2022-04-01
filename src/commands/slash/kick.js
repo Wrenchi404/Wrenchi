@@ -27,6 +27,12 @@ const command = new SlashCommand()
         if (member.kickable) {
             member.kick(reason);
             interaction.reply({ content: `${member.user.tag} has been kicked for ${reason}` });
+
+            member.createDM(true).then(async (dm) => {
+                await dm.send({
+                    content: `You have been kicked from ${interaction.guild.name} for ${reason}`
+                });
+            })
         } else {
             interaction.reply({ content: `${member.user.tag} cannot be kicked.` });
         }
