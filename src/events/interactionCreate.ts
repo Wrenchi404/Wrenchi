@@ -1,5 +1,5 @@
 import Wrenchi from "../lib/Wrenchi"
-import { Message, MessageEmbed, Interaction, Client } from "discord.js"
+import { Message, MessageEmbed, Interaction, Client, CommandInteractionOptionResolver } from "discord.js"
 import SlashCommand from "../lib/SlashCommand";
 
 const InteractionCreateEvent = async (client: Wrenchi, interaction: Interaction) => {
@@ -11,7 +11,8 @@ const InteractionCreateEvent = async (client: Wrenchi, interaction: Interaction)
             return interaction.reply(
                 "Sorry the command you used doesn't have any run function"
             );
-        command.run(client, interaction, interaction.options);
+        const options: CommandInteractionOptionResolver = interaction.options as CommandInteractionOptionResolver
+        command.run(client, interaction, options);
         return;
     }
 

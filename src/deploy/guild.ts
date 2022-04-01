@@ -3,7 +3,7 @@ import { Routes } from "discord-api-types/v9"
 import LoadCommands from "../utils/loadCommands"
 
 (async () => {
-    const config = await import("../data/config.json");
+    const config = await import("../../data/config.json");
     const rest = new REST({ version: "9" }).setToken(config.Bot.Token);
     const commands = await LoadCommands().then((cmds: any) => {
         return [].concat(cmds.slash).concat(cmds.context);

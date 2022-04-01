@@ -23,6 +23,8 @@ async function LoadDirectory(dir: string)  {
             f = files.length;
 
             files.forEach(async (file) => {
+                if (file.length === 0) return
+                
                 let cmd = await import(path.join(CommandsDir, file));
                 i++;
                 if (i == f) r = true;
