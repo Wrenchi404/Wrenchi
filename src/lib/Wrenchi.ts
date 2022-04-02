@@ -1,4 +1,4 @@
-import { Client, Collection, MessageEmbed, GuildTextBasedChannel, TextChannel } from "discord.js"
+import { Client, Collection, MessageEmbed, GuildTextBasedChannel, TextChannel, Message } from "discord.js"
 import { Manager } from "erela.js"
 import { REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v9"
@@ -8,10 +8,11 @@ import mongoose from "mongoose"
 import Config from "../../data/config.json"
 import SlashCommand from "./SlashCommand"
 import LoadCommands from "../utils/loadCommands"
+import ICommand from "../interfaces/Command"
 
 class Wrenchi extends Client {
     config: typeof Config;
-    LegacyCommands: Collection<string, any> = new Collection();
+    LegacyCommands: Collection<string, ICommand> = new Collection();
     SlashCommands = new Collection<string, SlashCommand>();
     ContextCommands = new Collection();
     Manager: Manager;
