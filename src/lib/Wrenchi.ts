@@ -6,6 +6,7 @@ import SlashCommand from "./SlashCommand"
 import { REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v9"
 import LoadCommands from "../utils/loadCommands"
+import mongoose from "mongoose"
 
 class Wrenchi extends Client {
     config: typeof Config;
@@ -109,6 +110,16 @@ class Wrenchi extends Client {
                     this.ContextCommands.set(file.split(".")[0].toLowerCase(), cmd);
                     console.log("ContextMenu Loaded: " + file.split(".")[0]);
                 });
+        });
+    }
+
+    async connectMongo() {
+        await mongoose.connect(this.config.Database.Mongo_URI, {
+            keepAlive: true,
+        }).then((mongo) => {
+            console.log("Connected to " + mongo.connection.name + " Database in MongoDB");
+        }).catch(err => {
+            console.log("Error while connecting to MongoDB " + err);
         });
     }
 }
