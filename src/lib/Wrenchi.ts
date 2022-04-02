@@ -1,13 +1,10 @@
 import { Client, Collection, MessageEmbed, GuildTextBasedChannel, TextChannel, Message } from "discord.js"
 import { Manager } from "erela.js"
-import { REST } from "@discordjs/rest"
-import { Routes } from "discord-api-types/v9"
 import fs from "fs"
 import path from "path"
 import mongoose from "mongoose"
 import Config from "../../data/config.json"
 import SlashCommand from "./SlashCommand"
-import LoadCommands from "../utils/loadCommands"
 import ICommand from "../interfaces/Command"
 
 class Wrenchi extends Client {
@@ -25,7 +22,6 @@ class Wrenchi extends Client {
         this.LegacyCommands = new Collection();
         this.SlashCommands = new Collection();
         this.ContextCommands = new Collection();
-        this.deployCommands();
         this.loadEvents();
         this.loadCommands();
 
@@ -172,21 +168,6 @@ class Wrenchi extends Client {
     build() {
         console.log("Started Bot..........")
         this.login(this.config.Bot.Token);
-    }
-
-    async deployCommands() {
-        const rest = new REST({ version: "9" }).setToken(Config.Bot.Token);
-        const commands: any[] = await LoadCommands().then((cmds: any) => {
-            return [].concat(cmds.slash).concat(cmds.context);
-        });
-
-        console.log("Deploying commands to guild...");
-        await rest
-            .put(Routes.applicationGuildCommands(Config.Bot.ClientID, Config.Discord.TestGuildID), {
-                body: commands,
-            })
-            .catch(console.log);
-        console.log("Successfully deployed commands!");
     }
 
     loadEvents() {
