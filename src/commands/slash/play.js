@@ -53,7 +53,7 @@ const command = new SlashCommand()
                 .editReply({
                     embeds: [client.ErrorEmbed("There was an error while searching")],
                 })
-                .catch(this.warn);
+                .catch(console.log("Rip"));
         }
 
         if (res.loadType === "NO_MATCHES") {
@@ -62,13 +62,13 @@ const command = new SlashCommand()
                 .editReply({
                     embeds: [client.ErrorEmbed("No results were found")],
                 })
-                .catch(this.warn);
+                .catch(console.log("Rip"));
         }
 
         if (res.loadType === "TRACK_LOADED" || res.loadType === "SEARCH_RESULT") {
             player.queue.add(res.tracks[0]);
-            if (!player.playing && !player.paused && !player.queue.size)
-                player.play();
+            if (!player.playing && !player.paused && !player.queue.size) player.play();
+
             let embed = client.Embed()
                 .setAuthor({ name: "Added song to queue", iconURL: client.user.displayAvatarURL() })
                 .setDescription(
@@ -82,21 +82,15 @@ const command = new SlashCommand()
             } catch (err) {
                 embed.setThumbnail(res.tracks[0].thumbnail);
             }
-            if (player.queue.totalSize > 1)
-                embed.addField("Position in queue", `${player.queue.size - 0}`, true);
+            if (player.queue.totalSize > 1) embed.addField("Position in queue", `${player.queue.size - 0}`, true);
             return interaction.editReply({ embeds: [embed] }).catch((err) => client.log(err));
         }
 
         if (res.loadType === "PLAYLIST_LOADED") {
             player.queue.add(res.tracks);
-            if (
-                !player.playing &&
-                !player.paused &&
-                player.queue.totalSize === res.tracks.length
-            )
-                player.play();
-            let embed = client
-                .Embed()
+            if (!player.playing && !player.paused && player.queue.totalSize === res.tracks.length) player.play();
+
+            let embed = client.Embed()
                 .setAuthor({
                     name: "Playlist added to queue",
                     iconURL: client.user.displayAvatarURL(),

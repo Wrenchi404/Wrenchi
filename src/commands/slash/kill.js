@@ -1,5 +1,5 @@
 const SlashCommand = require("../../lib/SlashCommand");
-const getRandomMessage = require("../../utils/messages");
+const getKillMessage = require("../../utils/getKillMessage");
 const NeverKillRoles = [
     "936219359632842763",
     "787198982807355442",
@@ -26,8 +26,8 @@ const command = new SlashCommand()
             return
         }
 
-        const message = getRandomMessage(killer, victim);
-        interaction.reply({ content: message });
+        const message = getKillMessage(killer, victim);
+        interaction.reply({ embeds: [message] });
     });
 
 module.exports = command;
