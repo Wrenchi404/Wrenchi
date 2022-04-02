@@ -11,6 +11,7 @@ class Wrenchi extends Client {
     config: typeof Config;
     LegacyCommands: Collection<string, any> = new Collection();
     SlashCommands = new Collection<string, SlashCommand>();
+    ContextCommands = new Collection();
     constructor(props = {
         intents: 32767,
     }) {
@@ -19,6 +20,7 @@ class Wrenchi extends Client {
         this.config = Config;
         this.LegacyCommands = new Collection();
         this.SlashCommands = new Collection();
+        this.ContextCommands = new Collection();
         this.deployCommands();
         this.loadEvents();
         this.loadCommands();
@@ -32,7 +34,7 @@ class Wrenchi extends Client {
     async deployCommands() {
         const rest = new REST({ version: "9" }).setToken(Config.Bot.Token);
         const commands: any[] = await LoadCommands().then((cmds: any) => {
-            return [].concat(cmds.slash)
+            return [].concat(cmds.slash).concat(cmds.context);
         });
 
         console.log("Deploying commands to guild...");
@@ -88,6 +90,24 @@ class Wrenchi extends Client {
 
                     this.SlashCommands.set(file.split(".")[0].toLowerCase(), command);
                     console.log("Slash Command Loaded: " + file.split(".")[0]);
+                });
+        });
+
+        let ContextDir = path.join(__dirname, "..", "commands", "context");
+        fs.readdir(ContextDir, (err, files) => {
+            if (!files.length) return console.log("No context commands found.");
+            if (err) throw err;
+            else
+                files.forEach((file) => {
+                    let cmd = require(ContextDir + "/" + file);
+                    if (!cmd.command || !cmd.run)
+                        return console.log(
+                            "Unable to load Command: " +
+                            file.split(".")[0] +
+                            ", File doesn't have either command/run"
+                        );
+                    this.ContextCommands.set(file.split(".")[0].toLowerCase(), cmd);
+                    console.log("ContextMenu Loaded: " + file.split(".")[0]);
                 });
         });
     }
