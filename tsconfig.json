@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*", "ready.ts"],
+  "include": ["src/**/*", "ready.ts", "src/lib/SlashCommand.ts"],
   "compilerOptions": {
     "resolveJsonModule": true,
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
