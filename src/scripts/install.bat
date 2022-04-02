@@ -1,0 +1,3 @@
+echo Installing the packages...
+
+npm i
