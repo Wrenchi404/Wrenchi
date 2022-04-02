@@ -1,18 +1,20 @@
-import { Client, Collection } from "discord.js"
-import Config from "../../data/config.json"
-import fs from "fs"
-import path from "path"
-import SlashCommand from "./SlashCommand"
+import { Client, Collection, MessageEmbed, GuildTextBasedChannel, TextChannel } from "discord.js"
+import { Manager } from "erela.js"
 import { REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v9"
-import LoadCommands from "../utils/loadCommands"
+import fs from "fs"
+import path from "path"
 import mongoose from "mongoose"
+import Config from "../../data/config.json"
+import SlashCommand from "./SlashCommand"
+import LoadCommands from "../utils/loadCommands"
 
 class Wrenchi extends Client {
     config: typeof Config;
     LegacyCommands: Collection<string, any> = new Collection();
     SlashCommands = new Collection<string, SlashCommand>();
     ContextCommands = new Collection();
+    Manager: Manager;
     constructor(props = {
         intents: 32767,
     }) {
@@ -25,6 +27,145 @@ class Wrenchi extends Client {
         this.deployCommands();
         this.loadEvents();
         this.loadCommands();
+
+        this.Manager = new Manager({
+            nodes: [
+                {
+                    identifier: this.config.Lavalink.Identifier,
+                    host: this.config.Lavalink.Host,
+                    port: this.config.Lavalink.Port,
+                    password: this.config.Lavalink.Password,
+                    retryAmount: this.config.Lavalink.RetryAmount,
+                    retryDelay: this.config.Lavalink.RetryDelay,
+                },
+            ],
+            send: (id, payload) => {
+                let guild = this.guilds.cache.get(id);
+                if (guild) guild.shard.send(payload);
+            },
+        })
+            .on("nodeConnect", (node) =>
+                console.log(
+                    `Node: ${node.options.identifier} | Lavalink node is connected.`
+                )
+            )
+            .on("nodeReconnect", (node) =>
+                console.log(
+                    `Node: ${node.options.identifier} | Lavalink node is reconnecting.`
+                )
+            )
+            .on("nodeDestroy", (node) =>
+                console.log(
+                    `Node: ${node.options.identifier} | Lavalink node is destroyed.`
+                )
+            )
+            .on("nodeDisconnect", (node) =>
+                console.log(
+                    `Node: ${node.options.identifier} | Lavalink node is disconnected.`
+                )
+            )
+            .on("nodeError", (node, err) =>
+                console.log(
+                    `Node: ${node.options.identifier} | Lavalink node has an error: ${err.message}`
+                )
+            )
+            .on("trackError", (player, track) => {
+                console.log(`Player: ${player.options.guild} | Track had an error.`)
+                this.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
+            })
+            .on("trackStuck", (player, track, threshold) => {
+                console.log(`Player: ${player.options.guild} | Track is stuck.`)
+                this.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
+            })
+            .on("trackStart", (player, track) => {
+                this.user.setPresence({ activities: [{ name: `To ${track.title}`, type: "LISTENING" }], status: "dnd" });
+            })
+            .on("playerMove", (player, oldChannel, newChannel) => {
+                const guild = this.guilds.cache.get(player.guild);
+                if (!guild) return;
+                const channel: any = guild.channels.cache.get(player.textChannel);
+                if (oldChannel === newChannel) return;
+                if (!channel) return;
+                if (newChannel === null || !newChannel) {
+                    if (!player) return;
+                    if (channel)
+                        channel.send({
+                            embeds: [
+                                new MessageEmbed()
+                                    .setColor("RED")
+                                    .setDescription(`Disconnected from <#${oldChannel}>`),
+                            ],
+                        });
+                    return player.destroy();
+                } else {
+                    player.voiceChannel = newChannel;
+                    setTimeout(() => player.pause(false), 1000);
+                    return undefined;
+                }
+            })
+            .on("playerCreate", (player) =>
+                console.log(
+                    `Player: ${player.options.guild
+                    } | A wild player has been created in ${this.guilds.cache.get(player.options.guild)
+                        ? this.guilds.cache.get(player.options.guild).name
+                        : "a guild"
+                    }`
+                )
+            )
+            .on("playerDestroy", (player) => {
+                console.log(
+                    `Player: ${player.options.guild
+                    } | A wild player has been destroyed in ${this.guilds.cache.get(player.options.guild)
+                        ? this.guilds.cache.get(player.options.guild).name
+                        : "a guild"
+                    }`
+                );
+
+                this.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
+            })
+            .on("queueEnd", (player) => {
+                console.log(`Player: ${player.options.guild} | Queue has been ended`);
+                let queueEmbed = new MessageEmbed()
+                    .setAuthor({
+                        name: "The queue has ended",
+                        iconURL: this.user.displayAvatarURL(),
+                    })
+                    .setFooter({ text: "Queue ended at" })
+                    .setTimestamp();
+                const channel: any = this.channels.cache.get(player.textChannel)
+                channel.send({ embeds: [queueEmbed] });
+                this.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
+
+                try {
+                    if (!player.playing) {
+                        setTimeout(() => {
+                            if (!player.playing && player.state !== "DISCONNECTED") {
+                                let DisconnectedEmbed = new MessageEmbed()
+                                    .setColor("RED")
+                                    .setAuthor({
+                                        name: "Disconnected",
+                                        iconURL: this.user.displayAvatarURL(),
+                                    })
+                                    .setDescription(
+                                        `The player has been disconnected due to inactivity.`
+                                    );
+
+                                const channel: any = this.channels.cache.get(player.textChannel)
+                                channel.send({ embeds: [DisconnectedEmbed] });
+                                player.destroy();
+
+                                this.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
+                            } else if (player.playing) {
+                                console.log(`Player: ${player.options.guild} | Still playing`);
+                                this.user.setPresence({ activities: [{ name: `To ${player.queue.current.title}`, type: "LISTENING" }], status: "dnd" });
+                            }
+                        }, 1000 * 60 * 2);
+                    }
+                } catch (err) {
+                    console.log(err)
+                    this.user.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
+                }
+            });
     }
 
     build() {
@@ -121,6 +262,12 @@ class Wrenchi extends Client {
         }).catch(err => {
             console.log("Error while connecting to MongoDB " + err);
         });
+    }
+
+    Embed(text: String) {
+        let embed = new MessageEmbed().setColor("RED");
+        if (text) embed.setDescription(text.toString());
+        return embed;
     }
 }
 
