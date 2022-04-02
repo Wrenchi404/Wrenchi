@@ -4,7 +4,7 @@ const ytdl = require("ytdl-core");
 
 const command = new SlashCommand()
     .setName("nowplaying")
-    .setDescription("Shows what's begin playing now.")
+    .setDescription("Let's tune it.")
     .setRun(async (client, interaction, options) => {
         let channel = await client.getChannel(client, interaction);
         if (!channel) return;
