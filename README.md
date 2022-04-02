@@ -1,2 +1,2 @@
 # Wrenchi
-TypeScript Version of Wrenchi
+JavaScript Version of Wrenchi
