@@ -1,11 +1,12 @@
 import { Client, Collection, MessageEmbed, GuildTextBasedChannel, TextChannel, Message } from "discord.js"
-import { Manager } from "erela.js"
+import { Manager, Node } from "erela.js"
 import fs from "fs"
 import path from "path"
 import mongoose from "mongoose"
 import Config from "../../data/config.json"
 import SlashCommand from "./SlashCommand"
 import ICommand from "../interfaces/Command"
+import getLavalink from "../utils/getLavalink"
 
 class Wrenchi extends Client {
     config: typeof Config;
@@ -13,6 +14,7 @@ class Wrenchi extends Client {
     SlashCommands = new Collection<string, SlashCommand>();
     ContextCommands = new Collection();
     Manager: Manager;
+    getLavalink: typeof getLavalink;
     constructor(props = {
         intents: 32767,
     }) {
@@ -24,6 +26,7 @@ class Wrenchi extends Client {
         this.ContextCommands = new Collection();
         this.loadEvents();
         this.loadCommands();
+        this.getLavalink = getLavalink;
 
         this.Manager = new Manager({
             nodes: [
