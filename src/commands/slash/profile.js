@@ -1,6 +1,6 @@
 const SlashCommand = require("../../lib/SlashCommand");
 const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
-const Profile = require("../../models/utility/ProfileSchema");
+const Profile = require("../../models/economy/ProfileSchema");
 
 const command = new SlashCommand()
     .setName("profile")

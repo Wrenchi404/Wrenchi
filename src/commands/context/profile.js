@@ -1,6 +1,6 @@
 const { ContextMenuCommandBuilder } = require("@discordjs/builders");
 const { MessageEmbed } = require("discord.js");
-const Profile = require("../../models/utility/ProfileSchema");
+const Profile = require("../../models/economy/ProfileSchema");
 
 module.exports = {
     command: new ContextMenuCommandBuilder().setName("Profile").setType(2),
