@@ -1,7 +1,6 @@
-import Wrenchi from "../lib/Wrenchi";
+import Wrenchi from "../lib/Wrenchi"
 
-const ReadyEvent = async (client: Wrenchi) => {
-    client.user?.setPresence({ activities: [{ name: `To Wrench's Code`, type: "LISTENING" }], status: "dnd" });
+module.exports = async (client: Wrenchi) => {
+    console.log("Successfully Logged in as " + client.user?.tag);
+    client.user?.setPresence({ activities: [{ name: `Wrench HideOut`, type: "WATCHING" }], status: "dnd" });
 }
-
-export default ReadyEvent;
