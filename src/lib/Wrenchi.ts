@@ -106,16 +106,14 @@ class Wrenchi extends Client {
 
     public async start() {
         if (this.devMode) console.warn("Starting in dev mode");
+        if (this.devMode) this.registerCommands();
+        if (this.prodMode) this.registerCommands(true);
+        await this.login(this.config.token);
         console.log("Wrenchi is starting.....");
 
         await this.loadEvents();
         await this.loadSlashCommands();
-        // await this.loadContextCommands();
-
-        if (this.devMode) this.registerCommands();
-        if (this.prodMode) this.registerCommands(true);
-
-        this.login(this.config.token);
+        await this.loadContextCommands();
     }
 }
 

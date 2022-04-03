@@ -2,16 +2,15 @@
   "name": "wrenchi",
   "version": "2.0.2",
   "description": "Wrenchi da bot",
-  "main": "./dist",
+  "main": "dist",
   "author": "Wrench",
   "license": "MIT",
   "repository": "git+https://github.com/WrenchWD/Wrenchi.git",
   "scripts": {
-    "dev": "npm run build && node dist --dev",
+    "dev": "npm run build && node dist/src --dev",
     "build": "npm run rm:build && tsc",
     "rm:build": "rm -rf dist",
-    "start": "npm run build && node dist",
-    "prod": "npm run build && node dist --prod"
+    "start": "npm run build && node dist/src"
   },
   "dependencies": {
     "@discordjs/builders": "^0.12.0",

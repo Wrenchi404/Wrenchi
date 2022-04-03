@@ -1,8 +1,9 @@
 import Wrenchi from "../lib/Wrenchi";
-import { CommandInteractionOptionResolver, Interaction } from "discord.js"
+import { CommandInteractionOptionResolver, Interaction, CommandInteraction } from "discord.js"
 
 export default async (client: Wrenchi, interaction: Interaction) => {
-    if (interaction.isCommand()) {
+    if (!interaction.isCommand()) return
+    else {
         let command = client.SlashCommands.find(
             (x) => x.name == interaction.commandName
         );
@@ -11,10 +12,10 @@ export default async (client: Wrenchi, interaction: Interaction) => {
                 "Sorry the command you used doesn't have any run function"
             );
         command.run(client, interaction, interaction.options as CommandInteractionOptionResolver);
-        return;
     }
 
-    if (interaction.isContextMenu()) {
+    if (!interaction.isContextMenu()) return
+    else {
         let command: any = client.ContextCommands.find(
             (x: any) => x.command.name == interaction.commandName
         );
@@ -23,6 +24,5 @@ export default async (client: Wrenchi, interaction: Interaction) => {
                 "Sorry the command you used doesn't have any run function"
             );
         command.run(client, interaction, interaction.options);
-        return;
     }
 }

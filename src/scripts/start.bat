@@ -1,3 +1,0 @@
-echo Running the bot....
-
-npm run start

@@ -3,7 +3,7 @@ import { CommandInteraction, CommandInteractionOptionResolver } from "discord.js
 import Wrenchi from "./Wrenchi"
 
 class SlashCommand extends SlashCommandBuilder {
-    type: Number;
+    public type: Number;
     run: (client: Wrenchi, interaction: CommandInteraction, options: CommandInteractionOptionResolver) => Promise<any>;
     constructor() {
         super();
