@@ -1,9 +1,8 @@
-import Wrenchi from "../lib/Wrenchi"
+import Wrenchi, { ICommand } from "../lib/Wrenchi"
 import { Message } from "discord.js"
-import ICommand from "../interfaces/Command";
 
 module.exports = async (client: Wrenchi, message: Message) => {
-    const prefix = client.config.Bot.Prefix
+    const prefix = client.config.prefix
     if (message.author.bot || message.channel.type === "DM" || !message.content.startsWith(prefix)) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);

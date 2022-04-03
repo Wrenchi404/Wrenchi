@@ -1,6 +1,5 @@
 import Wrenchi from "./lib/Wrenchi"
-const client = new Wrenchi()
+import "./utils/setupConsole"
+const client = new Wrenchi();
 
-client.build();
-
-export default client
+client.start();
