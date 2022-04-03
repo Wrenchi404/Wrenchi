@@ -1,6 +1,6 @@
 import SlashCommand from "../../lib/SlashCommand";
 
-const command = new SlashCommand()
+const Command = new SlashCommand()
     .setName("ping")
     .setDescription("Pong!")
     .setRun(async (client, interaction, options) => {
@@ -9,4 +9,4 @@ const command = new SlashCommand()
         });
     });
 
-module.exports = command
+export { Command }
