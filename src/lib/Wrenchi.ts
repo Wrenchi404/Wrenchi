@@ -2,7 +2,7 @@ import { Client, ClientOptions, Collection, Message } from "discord.js"
 import { REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v9"
 import fs from "fs"
-import path from "path"
+import { join } from "path";
 import Config from "../../data/config"
 import SlashCommand from "./SlashCommand"
 
@@ -28,9 +28,10 @@ class Wrenchi extends Client {
     public SlashCommands = new Collection<string, SlashCommand>();
     public ContextCommands = new Collection<string, any>();
 
-    private readonly SlashDir = path.join(__dirname, "..", "commands", "slash");
-    private readonly ContextDir = path.join(__dirname, "..", "commands", "context");
-    private readonly EventsDir = path.join(__dirname, "..", "events");
+    private readonly LegacyDir = join(__dirname, "..", "commands", "legacy");
+    private readonly SlashDir = join(__dirname, "..", "commands", "slash");
+    private readonly ContextDir = join(__dirname, "..", "commands", "context");
+    private readonly EventsDir = join(__dirname, "..", "events");
 
     constructor(props: ClientOptions = {
         intents: 32767,
@@ -38,23 +39,37 @@ class Wrenchi extends Client {
         super(props);
     }
 
-    public async loadSlashCommands() {
+    public async loadCommands() {
+        console.warn(`Loading "/" Commands`)
         return new Promise(async (resolve, reject) => {
             const SlashFiles = fs.readdirSync(this.SlashDir);
             for (const SlashFile of SlashFiles) {
-                const { Command } = await import(path.join(this.SlashDir, SlashFile));
+                const { Command } = await import(join(this.SlashDir, SlashFile));
                 this.SlashCommands.set(Command.name, Command);
                 console.log(`Loaded Slash Command: ${Command.name}`);
             }
-            resolve(this.loadSlashCommands);
+            resolve(this.loadCommands);
         });
     }
 
-    public async loadContextCommands() {
+    public async loadLegacyCommands() {
+        console.warn(`Loading Legacy Commands`)
+        return new Promise(async (resolve, reject) => {
+            const LegacyFiles = fs.readdirSync(this.LegacyDir);
+            for (const LegacyFile of LegacyFiles) {
+                const { Command } = await import(join(this.LegacyDir, LegacyFile));
+                this.LegacyCommands.set(Command.info.name, Command);
+                console.log(`Loaded Legacy Command: ${Command.info.name}`);
+            }
+            resolve(this.loadLegacyCommands);
+        });
+    }
+
+    public async loadContext() {
         return new Promise(async (resolve, reject) => {
             const ContextFiles = fs.readdirSync(this.ContextDir);
             for (const ContextFile of ContextFiles) {
-                const { Context } = await import(path.join(this.ContextDir, ContextFile));
+                const { Context } = await import(join(this.ContextDir, ContextFile));
                 this.ContextCommands.set(Context.name, Context);
                 console.log(`Loaded Context: ${Context.name}`);
             }
@@ -63,11 +78,12 @@ class Wrenchi extends Client {
     }
 
     public async loadEvents() {
+        console.warn("Loading Events...");
         return new Promise(async (resolve) => {
             const EventFiles = fs.readdirSync(this.EventsDir);
             for (const EventFile of EventFiles) {
-                const { default: event } = await import(path.join(this.EventsDir, EventFile));
-                this.on(EventFile.split(".")[0], event.bind(this));
+                const { default: event } = await import(join(this.EventsDir, EventFile));
+                this.on(EventFile.split(".")[0], event.bind(null, this));
                 console.log(`Loaded Event: ${EventFile.split(".")[0]}`);
             }
         })
@@ -78,14 +94,14 @@ class Wrenchi extends Client {
         let cmdz: any[] = []
 
         for (const command of commands) {
-            cmdz.push(command.toJSON());
+            cmdz.push(command[1].toJSON());
         }
 
         if (global) {
             console.warn("Registering global commands...");
             await this.devRest.put(Routes.applicationCommands(this.config.clientID), {
                 body: cmdz,
-            });
+            }).catch(console.error);
             console.log("Successfully registered global commands!");
         } else {
             console.warn("Deploying commands to guild...");
@@ -106,14 +122,11 @@ class Wrenchi extends Client {
 
     public async start() {
         if (this.devMode) console.warn("Starting in dev mode");
-        if (this.devMode) this.registerCommands();
-        if (this.prodMode) this.registerCommands(true);
-        await this.login(this.config.token);
         console.log("Wrenchi is starting.....");
-
-        await this.loadEvents();
-        await this.loadSlashCommands();
-        await this.loadContextCommands();
+        await this.loadCommands().then(async () => await this.registerCommands());
+        this.loadLegacyCommands();
+        this.loadEvents();
+        await this.login(this.config.token);
     }
 }
 

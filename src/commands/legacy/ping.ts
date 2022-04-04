@@ -1,7 +1,7 @@
 import { Message } from "discord.js"
 import Wrenchi from "../../lib/Wrenchi";
 
-module.exports = {
+const Command = {
     info: {
         name: "ping",
         description: "Pong!",
@@ -12,3 +12,5 @@ module.exports = {
         message.channel.send("Pong!");
     },
 };
+
+export { Command }

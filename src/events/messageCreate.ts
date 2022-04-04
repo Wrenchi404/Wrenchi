@@ -7,7 +7,7 @@ export default async (client: Wrenchi, message: Message) => {
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandName = args.shift().toLowerCase();
-    const command = client.LegacyCommands.get(commandName) || client.LegacyCommands.find((x: ICommand) => x.info.aliases && x.info.aliases.includes(commandName));
+    const command = client.LegacyCommands.get(commandName) || client.LegacyCommands.find(cmd => cmd.info.aliases && cmd.info.aliases.includes(commandName));
 
     if (!command) return
     else {
