@@ -5,6 +5,8 @@ import fs from "fs"
 import { join } from "path";
 import Config from "../../data/config"
 import SlashCommand from "./SlashCommand"
+import mongoose from "mongoose"
+import connectMongo from "../utils/connectMongo"
 
 export interface ICommand {
     info: {
@@ -21,8 +23,9 @@ class Wrenchi extends Client {
     public readonly devMode: boolean = process.argv.includes("--dev");
     public readonly prodMode: boolean = process.argv.includes("--prod");
     public readonly devRest = new REST({ version: "9" }).setToken(
-        this.config.token
+        this.config.Token
     );
+    public db: mongoose.Mongoose;
 
     public LegacyCommands = new Collection<string, ICommand>();
     public SlashCommands = new Collection<string, SlashCommand>();
@@ -43,6 +46,7 @@ class Wrenchi extends Client {
         console.warn(`Loading "/" Commands`)
         return new Promise(async (resolve, reject) => {
             const SlashFiles = fs.readdirSync(this.SlashDir);
+            if (!SlashFiles) return console.error(`No "/" Commands Founded`);
             for (const SlashFile of SlashFiles) {
                 const { Command } = await import(join(this.SlashDir, SlashFile));
                 this.SlashCommands.set(Command.name, Command);
@@ -56,6 +60,7 @@ class Wrenchi extends Client {
         console.warn(`Loading Legacy Commands`)
         return new Promise(async (resolve, reject) => {
             const LegacyFiles = fs.readdirSync(this.LegacyDir);
+            if (!LegacyFiles.length) return console.error("No Legacy Commands Founded");
             for (const LegacyFile of LegacyFiles) {
                 const { Command } = await import(join(this.LegacyDir, LegacyFile));
                 this.LegacyCommands.set(Command.info.name, Command);
@@ -68,6 +73,7 @@ class Wrenchi extends Client {
     public async loadContext() {
         return new Promise(async (resolve, reject) => {
             const ContextFiles = fs.readdirSync(this.ContextDir);
+            if (!ContextFiles) return console.error("No Context Commands Founded");
             for (const ContextFile of ContextFiles) {
                 const { Context } = await import(join(this.ContextDir, ContextFile));
                 this.ContextCommands.set(Context.name, Context);
@@ -81,6 +87,7 @@ class Wrenchi extends Client {
         console.warn("Loading Events...");
         return new Promise(async (resolve) => {
             const EventFiles = fs.readdirSync(this.EventsDir);
+            if (!EventFiles) return console.error("No Events Founded");
             for (const EventFile of EventFiles) {
                 const { default: event } = await import(join(this.EventsDir, EventFile));
                 this.on(EventFile.split(".")[0], event.bind(null, this));
@@ -99,7 +106,7 @@ class Wrenchi extends Client {
 
         if (global) {
             console.warn("Registering global commands...");
-            await this.devRest.put(Routes.applicationCommands(this.config.clientID), {
+            await this.devRest.put(Routes.applicationCommands(this.config.ClientID), {
                 body: cmdz,
             }).catch(console.error);
             console.log("Successfully registered global commands!");
@@ -108,8 +115,8 @@ class Wrenchi extends Client {
             await this.devRest
                 .put(
                     Routes.applicationGuildCommands(
-                        this.config.clientID,
-                        this.config.dev.guild
+                        this.config.ClientID,
+                        this.config.Dev.Guild
                     ),
                     {
                         body: cmdz,
@@ -120,13 +127,17 @@ class Wrenchi extends Client {
         }
     }
 
+    public async connectDatabase() {
+        await connectMongo(this);
+    }
+
     public async start() {
         if (this.devMode) console.warn("Starting in dev mode");
         console.log("Wrenchi is starting.....");
         await this.loadCommands().then(async () => await this.registerCommands());
         this.loadLegacyCommands();
         this.loadEvents();
-        await this.login(this.config.token);
+        await this.login(this.config.Token);
     }
 }
 

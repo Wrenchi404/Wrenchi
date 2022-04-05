@@ -2,7 +2,7 @@ import Wrenchi, { ICommand } from "../lib/Wrenchi"
 import { Message } from "discord.js"
 
 export default async (client: Wrenchi, message: Message) => {
-    const prefix = client.config.prefix
+    const prefix = client.config.Prefix
     if (message.author.bot || message.channel.type === "DM" || !message.content.startsWith(prefix)) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
