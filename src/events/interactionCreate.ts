@@ -2,6 +2,8 @@ import Wrenchi from "../lib/Wrenchi";
 import { CommandInteractionOptionResolver, Interaction, CommandInteraction } from "discord.js"
 
 export default async (client: Wrenchi, interaction: Interaction) => {
+    if (interaction.channel.type === "DM") return
+    
     if (!interaction.isCommand()) return
     else {
         let command = client.SlashCommands.find(

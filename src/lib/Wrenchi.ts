@@ -8,6 +8,7 @@ import { Manager } from "erela.js"
 import Config from "../../data/config"
 import SlashCommand from "./SlashCommand"
 import connectMongo from "../utils/connectMongo"
+import getChannel from "../utils/getChannel"
 
 export interface ICommand {
     info: {
@@ -26,8 +27,9 @@ class Wrenchi extends Client {
     public readonly devRest = new REST({ version: "9" }).setToken(
         this.config.Token
     );
-    public db: mongoose.Mongoose;
 
+    public db: mongoose.Mongoose;
+    public readonly getChannel = getChannel
     public Manager = new Manager({
         nodes: [
             {
@@ -35,6 +37,8 @@ class Wrenchi extends Client {
                 port: this.config.Erela.Port,
                 password: this.config.Erela.Password,
                 identifier: this.config.Erela.Identifier,
+                retryAmount: this.config.Erela.RetryAmount,
+                retryDelay: this.config.Erela.RetryDelay
             }
         ],
         send: (id, payload) => {
@@ -78,18 +82,26 @@ class Wrenchi extends Client {
 
         // Track Events
         .on("trackStart", (player, track) => this.user.setPresence({ activities: [{ name: `To ${track.title}`, type: "LISTENING" }], status: "dnd" }))
-        .on("trackEnd", (player, track, payload) => this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" }))
+        .on("trackEnd", (player, track, payload) => {
+            this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" });
+            player.destroy();
+        })
         .on("trackError", (player, track, error) => {
-            console.error(`Track Error: ${track.title} in ${player.options.guild}`, error)
-            this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" })
+            console.error(`Track Error: ${track.title} in ${player.options.guild}`, error);
+            this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" });
+            player.destroy();
         })
         .on("trackStuck", (player, track, payload) => {
-            console.warn(`Track Stuck: ${track.title} in ${player.options.guild}. Reason: ${payload.thresholdMs.toFixed()}ms threshold reached.`)
-            this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" })
+            console.warn(`Track Stuck: ${track.title} in ${player.options.guild}. Reason: ${payload.thresholdMs.toFixed()}ms threshold reached.`);
+            this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" });
+            player.destroy();
         })
 
         // Queue Event
-        .on("queueEnd", (player, track, payload) => this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" }))
+        .on("queueEnd", (player, track, payload) => {
+            this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" });
+            player.destroy();
+        })
 
         // Socket Event
         .on("socketClosed", (player, payload) => console.warn(`Socket Closed in ${player.options.guild}. Readon: ${payload.reason}, Code: ${payload.code}`));
@@ -196,6 +208,20 @@ class Wrenchi extends Client {
 
     public async connectDatabase() {
         await connectMongo(this);
+    }
+
+    public async convert(value: any) {
+        let sec = parseInt(value, 10);
+        sec = sec / 1000;
+
+        let hours: number | string = Math.floor(sec / 3600);
+        let minutes: number | string = Math.floor((sec - (hours * 3600)) / 60);
+        let seconds: number | string = Math.round(sec - (hours * 3600) - (minutes * 60));
+        if (hours < 10) { hours = "0" + hours; }
+        if (minutes < 10) { minutes = "0" + minutes; }
+        if (seconds < 10) { seconds = "0" + seconds; }
+
+        return hours + ':' + minutes + ':' + seconds;
     }
 
     public async start() {
