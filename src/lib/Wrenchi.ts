@@ -2,10 +2,11 @@ import { Client, ClientOptions, Collection, Message } from "discord.js"
 import { REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v9"
 import fs from "fs"
-import { join } from "path";
+import { join } from "path"
+import mongoose from "mongoose"
+import { Manager } from "erela.js"
 import Config from "../../data/config"
 import SlashCommand from "./SlashCommand"
-import mongoose from "mongoose"
 import connectMongo from "../utils/connectMongo"
 
 export interface ICommand {
@@ -26,6 +27,28 @@ class Wrenchi extends Client {
         this.config.Token
     );
     public db: mongoose.Mongoose;
+
+    public Manager = new Manager({
+        nodes: [
+            {
+                host: this.config.Erela.Host,
+                port: this.config.Erela.Port,
+                password: this.config.Erela.Password,
+                identifier: this.config.Erela.Identifier,
+            }
+        ],
+        send: (id, payload) => {
+            let guild = this.guilds.cache.get(id);
+            if (guild) guild.shard.send(payload);
+        }
+    })
+    // Node Events
+    .on("nodeCreate", (node) => console.log(`Node Created: ${node.options.identifier}`))
+    .on("nodeConnect", (node) => console.log(`Connected to Node: ${node.options.identifier}`))
+    .on("nodeDestroy", (node) => console.warn(`Node: ${node.options.identifier} has been destroyed.`))
+    .on("nodeDisconnect", (node, reason) => console.warn(`Node: ${node.options.identifier} disconnected. Code: ${reason.code}, Reason: ${reason.reason}`))
+    .on("nodeError", (node, err) => console.error(`Error on Node: ${node.options.identifier}`, err))
+    .on("nodeReconnect", (node) => console.warn(`Reconnecting to Node: ${node.options.identifier}`))
 
     public LegacyCommands = new Collection<string, ICommand>();
     public SlashCommands = new Collection<string, SlashCommand>();
@@ -93,7 +116,7 @@ class Wrenchi extends Client {
                 this.on(EventFile.split(".")[0], event.bind(null, this));
                 console.log(`Loaded Event: ${EventFile.split(".")[0]}`);
             }
-        })
+        });
     }
 
     private async registerCommands(global = false) {

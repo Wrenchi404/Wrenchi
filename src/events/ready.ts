@@ -5,4 +5,5 @@ export default async (client: Wrenchi) => {
     client.user.setPresence({ activities: [{ name: `Wrench HideOut`, type: "WATCHING" }], status: "dnd" });
 
     await client.connectDatabase();
+    await client.Manager.init(client.user.id);
 }
