@@ -9,6 +9,8 @@ import Config from "../../data/config"
 import SlashCommand from "./SlashCommand"
 import connectMongo from "../utils/connectMongo"
 import getChannel from "../utils/getChannel"
+import { getDuration, getSubs, getLikes } from "../utils/convert"
+import { HandleError } from "../handlers/errors"
 
 export interface ICommand {
     info: {
@@ -27,9 +29,13 @@ class Wrenchi extends Client {
     public readonly devRest = new REST({ version: "9" }).setToken(
         this.config.Token
     );
-
-    public db: mongoose.Mongoose;
     public readonly getChannel = getChannel
+    public readonly getDuration = getDuration
+    public readonly getSubs = getSubs
+    public readonly getLikes = getLikes
+    public handleError = HandleError(this)
+    
+    public db: mongoose.Mongoose;
     public Manager = new Manager({
         nodes: [
             {
@@ -208,20 +214,6 @@ class Wrenchi extends Client {
 
     public async connectDatabase() {
         await connectMongo(this);
-    }
-
-    public async convert(value: any) {
-        let sec = parseInt(value, 10);
-        sec = sec / 1000;
-
-        let hours: number | string = Math.floor(sec / 3600);
-        let minutes: number | string = Math.floor((sec - (hours * 3600)) / 60);
-        let seconds: number | string = Math.round(sec - (hours * 3600) - (minutes * 60));
-        if (hours < 10) { hours = "0" + hours; }
-        if (minutes < 10) { minutes = "0" + minutes; }
-        if (seconds < 10) { seconds = "0" + seconds; }
-
-        return hours + ':' + minutes + ':' + seconds;
     }
 
     public async start() {

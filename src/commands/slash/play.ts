@@ -31,6 +31,7 @@ const Command = new SlashCommand()
         if (res.loadType === "TRACK_LOADED" || res.loadType === "SEARCH_RESULT") {
             player.queue.add(res.tracks[0]);
             if (!player.playing && !player.paused && !player.queue.size) player.play();
+            const duration = await client.getDuration(res.tracks[0].duration);
 
             const embed = new MessageEmbed()
                 .setTitle(`🎵 | Now playing: ${res.tracks[0].title}`)
@@ -43,7 +44,7 @@ const Command = new SlashCommand()
                     },
                     {
                         name: "Duration",
-                        value: `${await client.convert(res.tracks[0].duration)}`,
+                        value: `${duration}`,
                         inline: true
                     },
                     {
