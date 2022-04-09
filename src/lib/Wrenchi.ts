@@ -159,9 +159,8 @@ class Wrenchi extends Client {
     public async loadContext() {
         return new Promise(async (resolve, reject) => {
             const ContextFiles = fs.readdirSync(this.ContextDir);
-            if (!ContextFiles) return console.error("No Context Commands Founded");
             for (const ContextFile of ContextFiles) {
-                const { default: Context } = await import(join(this.ContextDir, ContextFile));
+                const { Command: Context } = await import(join(this.ContextDir, ContextFile));
                 this.ContextCommands.set(Context.name, Context);
                 console.log(`Loaded Context: ${Context.name}`);
             }
@@ -214,14 +213,14 @@ class Wrenchi extends Client {
     }
 
     public async connectDatabase() {
-        await connectMongo(this);
+        return await connectMongo(this);
     }
 
     public async start() {
         if (this.devMode) console.warn("Starting in dev mode");
         console.log("Wrenchi is starting.....");
-        await this.loadCommands().then(async () => await this.registerCommands());
         await this.loadContext();
+        await this.loadCommands().then(async () => await this.registerCommands());
         this.loadLegacyCommands();
         this.loadEvents();
         await this.login(this.config.Token);

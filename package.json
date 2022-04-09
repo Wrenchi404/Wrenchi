@@ -11,6 +11,7 @@
     "build": "npm run rm:build && tsc",
     "rm:build": "rm -rf dist",
     "start": "npm run build && node dist/src",
+    "prod": "npm run build && node dist/src --prod",
     "destroy": "npm run build && tsc && node dist/src/handlers/destroyCommands.js"
   },
   "dependencies": {

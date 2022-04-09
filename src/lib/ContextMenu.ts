@@ -2,18 +2,18 @@ import { ContextMenuCommandBuilder } from "@discordjs/builders"
 import { ContextMenuInteraction } from "discord.js"
 import Wrenchi from "./Wrenchi"
 
-class ContextMenu extends ContextMenuCommandBuilder {
-    public run: (client: Wrenchi, menu: ContextMenuInteraction) => Promise<any>
+class ContextCommand extends ContextMenuCommandBuilder {
+    public run: (client: Wrenchi, interaction: ContextMenuInteraction) => Promise<any>;
+
     constructor() {
-        super()
-        return this
+        super();
+        return this;
     }
 
-    setRun(callback: (client: Wrenchi, menu: ContextMenuInteraction) => Promise<any>) {
+    public setRun(callback: (client: Wrenchi, interaction: ContextMenuInteraction) => Promise<any>) {
         this.run = callback
-        return this
+        return this;
     }
 }
 
-
-export default ContextMenu
+export default ContextCommand
