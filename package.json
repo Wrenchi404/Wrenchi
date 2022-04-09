@@ -10,7 +10,8 @@
     "dev": "npm run build && node dist/src --dev",
     "build": "npm run rm:build && tsc",
     "rm:build": "rm -rf dist",
-    "start": "npm run build && node dist/src"
+    "start": "npm run build && node dist/src",
+    "destroy": "npm run build && tsc && node dist/src/handlers/destroyCommands.js"
   },
   "dependencies": {
     "@discordjs/builders": "^0.12.0",
@@ -21,6 +22,7 @@
     "dotenv": "^16.0.0",
     "erela.js": "^2.3.3",
     "mongoose": "^6.2.10",
+    "readline": "^1.3.0",
     "ytdl-core": "^4.11.0"
   }
 }

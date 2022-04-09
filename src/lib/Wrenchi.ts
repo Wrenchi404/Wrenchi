@@ -1,16 +1,17 @@
 import { Client, ClientOptions, Collection, Message, MessageEmbed } from "discord.js"
 import { REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v9"
-import fs from "fs"
-import { join } from "path"
-import mongoose from "mongoose"
 import { Manager } from "erela.js"
-import Config from "../../data/config"
-import SlashCommand from "./SlashCommand"
-import connectMongo from "../utils/connectMongo"
-import getChannel from "../utils/getChannel"
+import { join } from "path"
 import { getDuration, getSubs, getLikes } from "../utils/convert"
 import { HandleError } from "../handlers/errors"
+import fs from "fs"
+import mongoose from "mongoose"
+import Config from "../../data/config"
+import SlashCommand from "./SlashCommand"
+import ContextMenu from "./ContextMenu"
+import connectMongo from "../utils/connectMongo"
+import getChannel from "../utils/getChannel"
 
 export interface ICommand {
     info: {
@@ -114,7 +115,7 @@ class Wrenchi extends Client {
 
     public LegacyCommands = new Collection<string, ICommand>();
     public SlashCommands = new Collection<string, SlashCommand>();
-    public ContextCommands = new Collection<string, any>();
+    public ContextCommands = new Collection<string, ContextMenu>();
 
     private readonly LegacyDir = join(__dirname, "..", "commands", "legacy");
     private readonly SlashDir = join(__dirname, "..", "commands", "slash");
@@ -160,7 +161,7 @@ class Wrenchi extends Client {
             const ContextFiles = fs.readdirSync(this.ContextDir);
             if (!ContextFiles) return console.error("No Context Commands Founded");
             for (const ContextFile of ContextFiles) {
-                const { Context } = await import(join(this.ContextDir, ContextFile));
+                const { default: Context } = await import(join(this.ContextDir, ContextFile));
                 this.ContextCommands.set(Context.name, Context);
                 console.log(`Loaded Context: ${Context.name}`);
             }
@@ -182,7 +183,7 @@ class Wrenchi extends Client {
     }
 
     private async registerCommands(global = false) {
-        let commands: any[] = [...this.SlashCommands, ...this.ContextCommands];
+        let commands = [...this.SlashCommands, ...this.ContextCommands];
         let cmdz: any[] = []
 
         for (const command of commands) {
@@ -220,6 +221,7 @@ class Wrenchi extends Client {
         if (this.devMode) console.warn("Starting in dev mode");
         console.log("Wrenchi is starting.....");
         await this.loadCommands().then(async () => await this.registerCommands());
+        await this.loadContext();
         this.loadLegacyCommands();
         this.loadEvents();
         await this.login(this.config.Token);
