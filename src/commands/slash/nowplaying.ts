@@ -1,7 +1,15 @@
-import { MessageEmbed, MessageButton, MessageActionRow } from "discord.js";
+import { MessageEmbed, MessageButton, MessageActionRow, Interaction } from "discord.js";
 import { Player } from "erela.js";
 import SlashCommand from "../../lib/SlashCommand"
 import ytdl from "ytdl-core"
+
+const StopButton = new MessageButton()
+    .setCustomId("stop_button")
+    .setEmoji("⏹️")
+    .setLabel("Stop")
+    .setStyle("DANGER");
+
+const FirstRow = new MessageActionRow().addComponents(StopButton);
 
 const Command = new SlashCommand()
     .setName("nowplaying")
@@ -79,7 +87,20 @@ const Command = new SlashCommand()
             ])
             .setFooter({ text: `Proudly Made by Wrench` });
 
-        interaction.editReply({ embeds: [embed] });
+        interaction.editReply({ embeds: [embed], components: [FirstRow] });
+
+        const filter = (inter: Interaction) => inter.user.id === interaction.user.id;
+        const collector = await interaction.channel.createMessageComponentCollector({
+            filter: filter,
+            time: 1000 * 60 * 30,
+        });
+
+        collector.on("collect", async (inter) => {
+            if (inter.customId === "stop_button") {
+                player.stop();
+                inter.reply({ content: "Stopped the music" });
+            }
+        });
     });
 
 export { Command }

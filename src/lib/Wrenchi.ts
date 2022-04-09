@@ -161,7 +161,6 @@ class Wrenchi extends Client {
             const ContextFiles = fs.readdirSync(this.ContextDir);
             for (const ContextFile of ContextFiles) {
                 const { Command: Context } = await import(join(this.ContextDir, ContextFile));
-                this.ContextCommands.set(Context.name, Context);
                 console.log(`Loaded Context: ${Context.name}`);
             }
             resolve(this.ContextCommands);
