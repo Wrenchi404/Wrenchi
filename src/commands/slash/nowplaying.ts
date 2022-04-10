@@ -3,13 +3,55 @@ import { Player } from "erela.js";
 import SlashCommand from "../../lib/SlashCommand"
 import ytdl from "ytdl-core"
 
+// Basic Row
+const SeekLeftButton = new MessageButton()
+    .setCustomId("seek_left_button")
+    .setEmoji("⏪")
+    .setStyle("SECONDARY");
+
+const PauseButton = new MessageButton()
+    .setCustomId("pause_button")
+    .setEmoji("⏸")
+    .setStyle("SECONDARY");
+
+const ResumeButton = new MessageButton()
+    .setCustomId("resume_button")
+    .setEmoji("▶️")
+    .setStyle("PRIMARY");
+
 const StopButton = new MessageButton()
     .setCustomId("stop_button")
     .setEmoji("⏹️")
-    .setLabel("Stop")
     .setStyle("DANGER");
 
-const FirstRow = new MessageActionRow().addComponents(StopButton);
+const SeekRghtButton = new MessageButton()
+    .setCustomId("seek_right_button")
+    .setEmoji("⏩")
+    .setStyle("SECONDARY");
+
+const FirstRow = new MessageActionRow().addComponents(SeekLeftButton, PauseButton, StopButton, SeekRghtButton);
+const AgainFirstRow = new MessageActionRow().addComponents(SeekLeftButton, ResumeButton, StopButton, SeekRghtButton);
+
+// Loop Row
+const TrackRepeatButton = new MessageButton()
+    .setCustomId("track_repeat_button")
+    .setEmoji("🔂")
+    .setStyle("SECONDARY");
+
+const RepeatButton = new MessageButton()
+    .setCustomId("repeat_button")
+    .setLabel("Loop")
+    .setDisabled(true)
+    .setStyle("SECONDARY");
+
+const QueueRepeatButton = new MessageButton()
+    .setCustomId("queue_repeat_button")
+    .setEmoji("🔁")
+    .setStyle("SECONDARY");
+
+const SecondRow = new MessageActionRow().addComponents(TrackRepeatButton, RepeatButton, QueueRepeatButton);
+
+// Volume Row
 
 const Command = new SlashCommand()
     .setName("nowplaying")
@@ -28,7 +70,7 @@ const Command = new SlashCommand()
         const likes = await client.getLikes(song.videoDetails.video_url);
         const subs = await client.getSubs(song.videoDetails.video_url);
 
-        const embed = new MessageEmbed()
+        let embed = new MessageEmbed()
             .setAuthor({ name: "Now Playing", iconURL: interaction.guild.iconURL({ dynamic: true }) })
             .setColor("AQUA")
             .setDescription(`**Current Song:** [${player.queue.current.title}](${player.queue.current.uri})`)
@@ -66,12 +108,7 @@ const Command = new SlashCommand()
                 },
                 {
                     name: "Status",
-                    value: `${player.paused ? "Paused" : "Playing"}`,
-                    inline: true
-                },
-                {
-                    name: "Volume",
-                    value: `${player.volume}%`,
+                    value: `${player.playing ? "Playing" : "Paused"}`,
                     inline: true
                 },
                 {
@@ -85,9 +122,9 @@ const Command = new SlashCommand()
                     inline: true
                 }
             ])
-            .setFooter({ text: `Proudly Made by Wrench` });
+            .setFooter({ text: `${player.queue.size ? player.queue[0].title : "Nothing in queue"}` });
 
-        interaction.editReply({ embeds: [embed], components: [FirstRow] });
+        const npMsg = await interaction.editReply({ embeds: [embed], components: [FirstRow, SecondRow] });
 
         const filter = (inter: Interaction) => inter.user.id === interaction.user.id;
         const collector = await interaction.channel.createMessageComponentCollector({
@@ -96,9 +133,82 @@ const Command = new SlashCommand()
         });
 
         collector.on("collect", async (inter) => {
+            if (inter.customId === "seek_left_button") {
+                if (player.position > 10000) {
+                    await player.seek(player.position - 10000);
+                    inter.reply({
+                        content: "Seeked left",
+                        ephemeral: true
+                    });
+                    return
+                }
+
+                await player.seek(0);
+                return inter.reply({
+                    content: "Seeked left",
+                    ephemeral: true
+                });
+            }
+
+            if (inter.customId === "pause_button") {
+                player.pause(true);
+                const msg = await inter.channel.messages.fetch(npMsg.id);
+                if (msg) {
+                    embed.fields[6].value = player.playing ? "Playing" : "Paused";
+                    msg.edit({
+                        embeds: [embed],
+                        components: [AgainFirstRow, SecondRow]
+                    });
+
+                    inter.reply({ content: "Paused", ephemeral: true });
+                }
+            }
+
+            if (inter.customId === "resume_button") {
+                player.pause(false);
+                const msg = await inter.channel.messages.fetch(npMsg.id);
+                if (msg) {
+                    embed.fields[6].value = player.playing ? "Playing" : "Paused";
+                    msg.edit({
+                        embeds: [embed],
+                        components: [FirstRow, SecondRow]
+                    });
+
+                    inter.reply({ content: "Resumed", ephemeral: true });
+                }
+            }
+
             if (inter.customId === "stop_button") {
                 player.stop();
-                inter.reply({ content: "Stopped the music" });
+                const msg = await inter.channel.messages.fetch(npMsg.id);
+                if (msg) msg.delete()
+
+                inter.channel.send({ content: "Stopped the music" });
+            }
+
+            if (inter.customId === "seek_right_button") {
+                if (player.position < player.queue.current.duration - 10000) {
+                    await player.seek(player.position + 10000);
+                    inter.reply({
+                        content: "Seeked right",
+                        ephemeral: true
+                    });
+                    return
+                }
+
+                await player.seek(player.queue.current.duration);
+                return inter.reply({
+                    content: "Seeked right",
+                    ephemeral: true
+                });
+            }
+
+            if (inter.customId === "track_repeat_button") {
+                inter.reply({ content: "Coming", ephemeral: true });
+            }
+
+            if (inter.customId === "queue_repeat_button") {
+                inter.reply({ content: "Coming", ephemeral: true });
             }
         });
     });
