@@ -60,6 +60,8 @@ const Command = new SlashCommand()
                 embed.setThumbnail(res.tracks[0].thumbnail)
             }
 
+            interaction.editReply({ content: null, embeds: [embed]});
+
             if (player.queue.totalSize > 1) {
                 embed.addField("Position in queue", `${player.queue.size - 0}`, true);
                 interaction.editReply({ content: null, embeds: [embed] }).catch(console.error);

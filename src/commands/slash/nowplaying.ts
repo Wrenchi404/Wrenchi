@@ -25,12 +25,17 @@ const StopButton = new MessageButton()
     .setEmoji("⏹️")
     .setStyle("DANGER");
 
+const SkipButton = new MessageButton()
+    .setCustomId("skip_button")
+    .setEmoji("⏭️")
+    .setStyle("SECONDARY");
+
 const SeekRghtButton = new MessageButton()
     .setCustomId("seek_right_button")
     .setEmoji("⏩")
     .setStyle("SECONDARY");
 
-const FirstRow = new MessageActionRow().addComponents(SeekLeftButton, PauseButton, StopButton, SeekRghtButton);
+const FirstRow = new MessageActionRow().addComponents(SeekLeftButton, PauseButton, StopButton, SkipButton, SeekRghtButton);
 const AgainFirstRow = new MessageActionRow().addComponents(SeekLeftButton, ResumeButton, StopButton, SeekRghtButton);
 
 // Volume Row
@@ -176,9 +181,34 @@ const Command = new SlashCommand()
             if (inter.customId === "stop_button") {
                 player.stop();
                 const msg = await inter.channel.messages.fetch(npMsg.id);
-                if (msg) msg.delete()
+                if (msg) msg.delete();
 
+                client.NowPlayingMessage.delete(interaction.guild.id);
                 inter.channel.send({ content: "Stopped the music" });
+            }
+
+            if (inter.customId === "skip_button") {
+                if (!player.queue.size) {
+                    player.destroy()
+                    const msg = await inter.channel.messages.fetch(npMsg.id);
+                    if (msg) msg.delete();
+
+                    inter.channel.send({ content: "Stopped because there is no more songs in the queue." });
+                    return
+                }
+
+                player.stop();
+                inter.reply({ content: "Skipped", ephemeral: true });
+
+                if (player.queue.size >= 0) {
+                    let a = embed.setFooter({ text: `Next in queue: ${player.queue[0].title}` });
+                    const msg = await inter.channel.messages.fetch(npMsg.id);
+                    if (msg) msg.edit({ embeds: [a] });
+                } else {
+                    let a = embed.setFooter({ text: `Nothing in queue` });
+                    const msg = await inter.channel.messages.fetch(npMsg.id);
+                    if (msg) msg.edit({ embeds: [a] });
+                }
             }
 
             if (inter.customId === "seek_right_button") {

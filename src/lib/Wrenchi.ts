@@ -92,7 +92,9 @@ class Wrenchi extends Client {
         .on("trackStart", async (player, track) => {
             this.user.setPresence({ activities: [{ name: `To ${track.title}`, type: "LISTENING" }], status: "dnd" });
 
-            const msg = this.NowPlayingMessage.get(player.guild)
+            const msg = this.NowPlayingMessage.get(player.guild);
+            if (msg === undefined) return;
+
             if (msg) {
                 const song = await ytdl.getInfo(track.uri);
 
@@ -130,10 +132,12 @@ class Wrenchi extends Client {
             this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" });
             player.destroy();
 
-            const msg = this.NowPlayingMessage.get(player.guild)
+            const msg = this.NowPlayingMessage.get(player.guild);
+            if (msg === undefined) return;
+            
             if (msg) {
                 msg.delete()
-                this.NowPlayingMessage.delete(player.guild)
+                this.NowPlayingMessage.delete(player.guild);
             }
         })
 
