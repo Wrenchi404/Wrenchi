@@ -1,12 +1,13 @@
 import { Client, ClientOptions, Collection, Message, MessageEmbed } from "discord.js"
 import { REST } from "@discordjs/rest"
-import { APIMessage, Routes } from "discord-api-types/v9"
+import { Routes } from "discord-api-types/v9"
 import { Manager } from "erela.js"
 import { join } from "path"
 import { getDuration, getSubs, getLikes } from "../utils/convert"
 import { HandleError } from "../handlers/errors"
 import fs from "fs"
 import mongoose from "mongoose"
+import ytdl from "ytdl-core"
 import Config from "../../data/config"
 import SlashCommand from "./SlashCommand"
 import ContextMenu from "./ContextMenu"
@@ -34,7 +35,7 @@ class Wrenchi extends Client {
     public readonly getDuration = getDuration
     public readonly getSubs = getSubs
     public readonly getLikes = getLikes
-    
+
     public db: mongoose.Mongoose;
     public handleError = HandleError(this)
     public Manager = new Manager({
@@ -88,10 +89,30 @@ class Wrenchi extends Client {
         })
 
         // Track Events
-        .on("trackStart", (player, track) => this.user.setPresence({ activities: [{ name: `To ${track.title}`, type: "LISTENING" }], status: "dnd" }))
-        .on("trackEnd", (player, track, payload) => {
+        .on("trackStart", async (player, track) => {
+            this.user.setPresence({ activities: [{ name: `To ${track.title}`, type: "LISTENING" }], status: "dnd" });
+
+            const msg = this.NowPlayingMessage.get(player.guild)
+            if (msg) {
+                const song = await ytdl.getInfo(track.uri);
+
+                let embed = msg.embeds[0]
+                embed.setDescription(`**Current Song:** [${track.title}](${track.uri})`)
+                embed.setThumbnail(player.queue.current.thumbnail)
+                embed.fields[0].value = `${track.author}`
+                embed.fields[1].value = `${await this.getSubs(track.uri)}`
+                embed.fields[2].value = `${song.videoDetails.category}`
+                embed.fields[3].value = `${await this.getDuration(track.duration)}`
+                embed.fields[4].value = `${await this.getLikes(track.uri)}`
+                embed.fields[5].value = `${song.videoDetails.publishDate}`
+                embed.fields[6].value = `${player.playing ? "Playing" : "Paused"}`
+                embed.setFooter({ text: `Next on queue: ${player.queue.size ? player.queue[0].title : "Nothing in queue"}` })
+
+                msg.edit({ embeds: [embed] })
+            }
+        })
+        .on("trackEnd", async (player, track, payload) => {
             this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" });
-            player.destroy();
         })
         .on("trackError", (player, track, error) => {
             console.error(`Track Error: ${track.title} in ${player.options.guild}`, error);
@@ -108,6 +129,12 @@ class Wrenchi extends Client {
         .on("queueEnd", (player, track, payload) => {
             this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" });
             player.destroy();
+
+            const msg = this.NowPlayingMessage.get(player.guild)
+            if (msg) {
+                msg.delete()
+                this.NowPlayingMessage.delete(player.guild)
+            }
         })
 
         // Socket Event
@@ -116,6 +143,7 @@ class Wrenchi extends Client {
     public LegacyCommands = new Collection<string, ICommand>();
     public SlashCommands = new Collection<string, SlashCommand>();
     public ContextCommands = new Collection<string, ContextMenu>();
+    public NowPlayingMessage = new Collection<string, any>();
 
     private readonly LegacyDir = join(__dirname, "..", "commands", "legacy");
     private readonly SlashDir = join(__dirname, "..", "commands", "slash");

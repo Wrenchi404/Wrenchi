@@ -2,6 +2,7 @@ import { MessageEmbed, MessageButton, MessageActionRow, Interaction, Message } f
 import { Player } from "erela.js"
 import SlashCommand from "../../lib/SlashCommand"
 import ytdl from "ytdl-core"
+import { APIMessage } from "discord-api-types/v9";
 
 // Basic Row
 const SeekLeftButton = new MessageButton()
@@ -53,6 +54,8 @@ const Command = new SlashCommand()
         const player: Player = client.Manager.players.get(interaction.guild.id);
         if (!player) return interaction.reply({ content: "Nothing is playing right now." });
 
+        const NowPlayingMessage: Message = client.NowPlayingMessage.get(interaction.guild.id);
+
         interaction.deferReply({ fetchReply: true });
 
         let VolumeButton = new MessageButton()
@@ -75,7 +78,7 @@ const Command = new SlashCommand()
             .setFields([
                 {
                     name: "Author",
-                    value: `[${player.queue.current.author}](${song.videoDetails.ownerProfileUrl})`,
+                    value: `${player.queue.current.author}`,
                     inline: true
                 },
                 {
@@ -109,10 +112,15 @@ const Command = new SlashCommand()
                     inline: true
                 }
             ])
-            .setFooter({ text: `${player.queue.size ? player.queue[0].title : "Nothing in queue"}` });
+            .setFooter({ text: `Next on queue: ${player.queue.size ? player.queue[0].title : "Nothing in queue"}` });
 
         const npMsg = await interaction.editReply({ embeds: [embed], components: [FirstRow, SecondRow] });
-        
+        if (!NowPlayingMessage) client.NowPlayingMessage.set(interaction.guild.id, npMsg);
+        else {
+            NowPlayingMessage.delete();
+            client.NowPlayingMessage.set(interaction.guild.id, npMsg);
+        }
+
         const filter = (inter: Interaction) => inter.user.id === interaction.user.id;
         const collector = await interaction.channel.createMessageComponentCollector({
             filter: filter,
@@ -194,7 +202,7 @@ const Command = new SlashCommand()
                 if (player.volume === 100) return inter.reply({ content: "Maximum value reached.", ephemeral: true });
                 player.setVolume(player.volume + 10)
                 VolumeButton.setLabel(`${player.volume}%`);
-                
+
                 const msg = await inter.channel.messages.fetch(npMsg.id);
                 if (msg) {
                     msg.edit({

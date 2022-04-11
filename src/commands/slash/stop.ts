@@ -1,3 +1,4 @@
+import { Message } from "discord.js";
 import { Player } from "erela.js";
 import SlashCommand from "../../lib/SlashCommand"
 
@@ -13,6 +14,12 @@ const Command = new SlashCommand()
 
         player.destroy();
         interaction.reply({ content: "Stopped playing the song." });
+        
+        const msg = client.NowPlayingMessage.get(interaction.guild.id);
+        if (msg) {
+            msg.delete();
+            client.NowPlayingMessage.delete(interaction.guild.id);
+        }
     });
 
 export { Command }

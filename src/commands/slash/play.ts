@@ -60,8 +60,18 @@ const Command = new SlashCommand()
                 embed.setThumbnail(res.tracks[0].thumbnail)
             }
 
-            if (player.queue.totalSize > 1) embed.addField("Position in queue", `${player.queue.size - 0}`, true);
-            return interaction.editReply({ content: null, embeds: [embed] }).catch(console.error);
+            if (player.queue.totalSize > 1) {
+                embed.addField("Position in queue", `${player.queue.size - 0}`, true);
+                interaction.editReply({ content: null, embeds: [embed] }).catch(console.error);
+
+                const msg = client.NowPlayingMessage.get(interaction.guild.id);
+                if (msg) {
+                    let embed = msg.embeds[0]
+                    embed.setFooter({ text: `Next on queue: ${player.queue[0].title}` })
+
+                    msg.edit({ embeds: [embed] });
+                }
+            }
         }
     });
 
