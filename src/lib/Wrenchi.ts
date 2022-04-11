@@ -1,6 +1,6 @@
 import { Client, ClientOptions, Collection, Message, MessageEmbed } from "discord.js"
 import { REST } from "@discordjs/rest"
-import { Routes } from "discord-api-types/v9"
+import { APIMessage, Routes } from "discord-api-types/v9"
 import { Manager } from "erela.js"
 import { join } from "path"
 import { getDuration, getSubs, getLikes } from "../utils/convert"
@@ -34,9 +34,9 @@ class Wrenchi extends Client {
     public readonly getDuration = getDuration
     public readonly getSubs = getSubs
     public readonly getLikes = getLikes
-    public handleError = HandleError(this)
     
     public db: mongoose.Mongoose;
+    public handleError = HandleError(this)
     public Manager = new Manager({
         nodes: [
             {

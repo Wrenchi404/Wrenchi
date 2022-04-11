@@ -1,5 +1,5 @@
-import { MessageEmbed, MessageButton, MessageActionRow, Interaction } from "discord.js";
-import { Player } from "erela.js";
+import { MessageEmbed, MessageButton, MessageActionRow, Interaction, Message } from "discord.js"
+import { Player } from "erela.js"
 import SlashCommand from "../../lib/SlashCommand"
 import ytdl from "ytdl-core"
 
@@ -32,26 +32,16 @@ const SeekRghtButton = new MessageButton()
 const FirstRow = new MessageActionRow().addComponents(SeekLeftButton, PauseButton, StopButton, SeekRghtButton);
 const AgainFirstRow = new MessageActionRow().addComponents(SeekLeftButton, ResumeButton, StopButton, SeekRghtButton);
 
-// Loop Row
-const TrackRepeatButton = new MessageButton()
-    .setCustomId("track_repeat_button")
-    .setEmoji("🔂")
-    .setStyle("SECONDARY");
-
-const RepeatButton = new MessageButton()
-    .setCustomId("repeat_button")
-    .setLabel("Loop")
-    .setDisabled(true)
-    .setStyle("SECONDARY");
-
-const QueueRepeatButton = new MessageButton()
-    .setCustomId("queue_repeat_button")
-    .setEmoji("🔁")
-    .setStyle("SECONDARY");
-
-const SecondRow = new MessageActionRow().addComponents(TrackRepeatButton, RepeatButton, QueueRepeatButton);
-
 // Volume Row
+const MinusButton = new MessageButton()
+    .setCustomId("minus_button")
+    .setEmoji("➖")
+    .setStyle("SECONDARY");
+
+const PlusButton = new MessageButton()
+    .setCustomId("plus_button")
+    .setEmoji("➕")
+    .setStyle("SECONDARY");
 
 const Command = new SlashCommand()
     .setName("nowplaying")
@@ -64,6 +54,13 @@ const Command = new SlashCommand()
         if (!player) return interaction.reply({ content: "Nothing is playing right now." });
 
         interaction.deferReply({ fetchReply: true });
+
+        let VolumeButton = new MessageButton()
+            .setCustomId("volume_button")
+            .setLabel(`${player.volume}%`)
+            .setDisabled(true)
+            .setStyle("SECONDARY");
+        const SecondRow = new MessageActionRow().addComponents(MinusButton, VolumeButton, PlusButton);
 
         const duration = await client.getDuration(player.queue.current.duration);
         const song = await ytdl.getInfo(player.queue.current.uri);
@@ -110,22 +107,12 @@ const Command = new SlashCommand()
                     name: "Status",
                     value: `${player.playing ? "Playing" : "Paused"}`,
                     inline: true
-                },
-                {
-                    name: "Queue Repeat",
-                    value: `${player.queueRepeat ? "Enabled" : "Disabled"}`,
-                    inline: true
-                },
-                {
-                    name: "Track Repeat",
-                    value: `${player.trackRepeat ? "Enabled" : "Disabled"}`,
-                    inline: true
                 }
             ])
             .setFooter({ text: `${player.queue.size ? player.queue[0].title : "Nothing in queue"}` });
 
         const npMsg = await interaction.editReply({ embeds: [embed], components: [FirstRow, SecondRow] });
-
+        
         const filter = (inter: Interaction) => inter.user.id === interaction.user.id;
         const collector = await interaction.channel.createMessageComponentCollector({
             filter: filter,
@@ -203,12 +190,36 @@ const Command = new SlashCommand()
                 });
             }
 
-            if (inter.customId === "track_repeat_button") {
-                inter.reply({ content: "Coming", ephemeral: true });
+            if (inter.customId === "plus_button") {
+                if (player.volume === 100) return inter.reply({ content: "Maximum value reached.", ephemeral: true });
+                player.setVolume(player.volume + 10)
+                VolumeButton.setLabel(`${player.volume}%`);
+                
+                const msg = await inter.channel.messages.fetch(npMsg.id);
+                if (msg) {
+                    msg.edit({
+                        embeds: [embed],
+                        components: [FirstRow, SecondRow]
+                    });
+
+                    inter.reply({ content: "Increased", ephemeral: true });
+                }
             }
 
-            if (inter.customId === "queue_repeat_button") {
-                inter.reply({ content: "Coming", ephemeral: true });
+            if (inter.customId === "minus_button") {
+                if (player.volume === 0) return inter.reply({ content: "Minimum value reached.", ephemeral: true });
+                player.setVolume(player.volume - 10)
+                VolumeButton.setLabel(`${player.volume}%`);
+
+                const msg = await inter.channel.messages.fetch(npMsg.id);
+                if (msg) {
+                    msg.edit({
+                        embeds: [embed],
+                        components: [FirstRow, SecondRow]
+                    });
+
+                    inter.reply({ content: "Decreased", ephemeral: true });
+                }
             }
         });
     });
