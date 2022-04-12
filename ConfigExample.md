@@ -1,6 +1,6 @@
 # Config Example
-[]: # Language: Typescript
-[]: # Path: /src/data/config.ts
+###  Language: Typescript
+###  Path: /src/data/config.ts
 
 
 ```ts
