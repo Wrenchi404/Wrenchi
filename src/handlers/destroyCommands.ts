@@ -8,7 +8,7 @@ const rl = readline.createInterface({
 });
 
 (async () => {
-    const config = await import("../../data/config")
+    const config = await import("../data/config")
     const rest = new REST({ version: "9" }).setToken(config.default.Token);
 
     rl.question(
