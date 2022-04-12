@@ -2,7 +2,6 @@ import { MessageEmbed, MessageButton, MessageActionRow, Interaction, Message } f
 import { Player } from "erela.js"
 import SlashCommand from "../../../lib/SlashCommand"
 import ytdl from "ytdl-core"
-import { APIMessage } from "discord-api-types/v9";
 
 // Basic Row
 const SeekLeftButton = new MessageButton()
