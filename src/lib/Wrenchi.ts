@@ -8,7 +8,7 @@ import { HandleError } from "../handlers/errors"
 import fs from "fs"
 import mongoose from "mongoose"
 import ytdl from "ytdl-core"
-import Config from "../data/config"
+import Config from "../../data/config"
 import SlashCommand from "./SlashCommand"
 import ContextMenu from "./ContextMenu"
 import connectMongo from "../utils/connectMongo"
@@ -120,6 +120,12 @@ class Wrenchi extends Client {
             console.error(`Track Error: ${track.title} in ${player.options.guild}`, error);
             this.user.setPresence({ activities: [{ name: "Wrench's Codes", type: "WATCHING" }], status: "dnd" });
             player.destroy();
+
+            const msg = this.NowPlayingMessage.get(player.guild);
+            if (msg === undefined) return;
+            if (msg) {
+                msg.delete()
+            }
         })
         .on("trackStuck", (player, track, payload) => {
             console.warn(`Track Stuck: ${track.title} in ${player.options.guild}. Reason: ${payload.thresholdMs.toFixed()}ms threshold reached.`);
@@ -181,10 +187,9 @@ class Wrenchi extends Client {
     public async loadLegacyCommands() {
         console.warn(`Loading Legacy Commands`)
         return new Promise(async (resolve, reject) => {
-            const LegacyCategories = fs.readdirSync(this.LegacyDir);
-            for (const LegacyCategory of LegacyCategories) {
-                const { Command } = await import(join(this.LegacyDir, LegacyCategory));
-                Command.category = LegacyCategory;
+            const LegacyFiles = fs.readdirSync(this.LegacyDir);
+            for (const LegacyFile of LegacyFiles) {
+                const { Command } = await import(join(this.LegacyDir, LegacyFile));
                 this.LegacyCommands.set(Command.info.name, Command);
                 console.log(`Loaded Legacy Command: ${Command.info.name}`);
             }

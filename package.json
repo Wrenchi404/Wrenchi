@@ -12,7 +12,7 @@
     "rm:build": "rm -rf dist",
     "start": "npm run build && node dist/src",
     "prod": "npm run build && node dist/src --prod",
-    "destroy": "npm run build && tsc && node dist/src/handlers/destroyCommands.js"
+    "destroy": "npm run build && tsc && node dist/handlers/destroyCommands.js"
   },
   "dependencies": {
     "@discordjs/builders": "^0.12.0",
