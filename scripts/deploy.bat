@@ -1,3 +1,0 @@
-echo Deploying....
-
-npm run deploy

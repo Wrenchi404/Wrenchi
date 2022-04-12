@@ -1,7 +1,1 @@
-/archive
-/node_modules
-package-lock.json
 /data
-yarn.lock
-/src/public
-/src/lib/Website.js

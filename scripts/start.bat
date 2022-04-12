@@ -1,3 +1,0 @@
-echo Starting....
-
-npm run start
