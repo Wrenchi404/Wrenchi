@@ -1,4 +1,4 @@
-import SlashCommand from "../../lib/SlashCommand"
+import SlashCommand from "../../../lib/SlashCommand"
 import { Player, SearchResult } from "erela.js"
 import { MessageEmbed } from "discord.js"
 

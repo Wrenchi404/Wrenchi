@@ -1,5 +1,5 @@
 import { Player } from "erela.js";
-import SlashCommand from "../../lib/SlashCommand"
+import SlashCommand from "../../../lib/SlashCommand"
 
 const Command = new SlashCommand()
     .setName("skip")

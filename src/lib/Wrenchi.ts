@@ -134,7 +134,7 @@ class Wrenchi extends Client {
 
             const msg = this.NowPlayingMessage.get(player.guild);
             if (msg === undefined) return;
-            
+
             if (msg) {
                 msg.delete()
                 this.NowPlayingMessage.delete(player.guild);
@@ -161,14 +161,18 @@ class Wrenchi extends Client {
     }
 
     public async loadCommands() {
-        console.warn(`Loading "/" Commands`)
         return new Promise(async (resolve, reject) => {
-            const SlashFiles = fs.readdirSync(this.SlashDir);
-            if (!SlashFiles) return console.error(`No "/" Commands Founded`);
-            for (const SlashFile of SlashFiles) {
-                const { Command } = await import(join(this.SlashDir, SlashFile));
-                this.SlashCommands.set(Command.name, Command);
-                console.log(`Loaded Slash Command: ${Command.name}`);
+            const SlashCategorys = fs.readdirSync(this.SlashDir);
+            for (const SlashCategory of SlashCategorys) {
+                const SlashFiles = fs.readdirSync(join(this.SlashDir, SlashCategory));
+                for (const SlashFile of SlashFiles) {
+                    const { Command } = await import(
+                        join(this.SlashDir, SlashCategory, SlashFile)
+                    );
+                    Command.category = SlashCategory;
+                    this.SlashCommands.set(Command.name, Command);
+                    console.log(`Loaded Slash Command: ${Command.name}`);
+                }
             }
             resolve(this.loadCommands);
         });
@@ -177,10 +181,10 @@ class Wrenchi extends Client {
     public async loadLegacyCommands() {
         console.warn(`Loading Legacy Commands`)
         return new Promise(async (resolve, reject) => {
-            const LegacyFiles = fs.readdirSync(this.LegacyDir);
-            if (!LegacyFiles.length) return console.error("No Legacy Commands Founded");
-            for (const LegacyFile of LegacyFiles) {
-                const { Command } = await import(join(this.LegacyDir, LegacyFile));
+            const LegacyCategories = fs.readdirSync(this.LegacyDir);
+            for (const LegacyCategory of LegacyCategories) {
+                const { Command } = await import(join(this.LegacyDir, LegacyCategory));
+                Command.category = LegacyCategory;
                 this.LegacyCommands.set(Command.info.name, Command);
                 console.log(`Loaded Legacy Command: ${Command.info.name}`);
             }

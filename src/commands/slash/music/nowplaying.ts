@@ -1,6 +1,6 @@
 import { MessageEmbed, MessageButton, MessageActionRow, Interaction, Message } from "discord.js"
 import { Player } from "erela.js"
-import SlashCommand from "../../lib/SlashCommand"
+import SlashCommand from "../../../lib/SlashCommand"
 import ytdl from "ytdl-core"
 import { APIMessage } from "discord-api-types/v9";
 
