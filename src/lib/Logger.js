@@ -15,7 +15,7 @@ function getTime() {
     })
 
     return `${green(
-        `[${IST.getHours()}:${IST.getMinutes()}:${IST.getSeconds()}]`
+        `[${IST.getHours()}:${IST.getMinutes()}}]`
     )} | ${cyan(time)} | `;
 }
 
