@@ -14,7 +14,9 @@
     "colorette": "^2.0.16",
     "discord-api-types": "^0.31.1",
     "discord.js": "^13.6.0",
+    "erela.js": "^2.3.3",
     "fs": "^0.0.1-security",
-    "mongoose": "^6.2.10"
+    "mongoose": "^6.2.10",
+    "ytdl-core": "^4.11.0"
   }
 }

@@ -8,8 +8,14 @@ const Command = {
         aliases: ["pong"],
     },
 
+    /**
+     * 
+     * @param {Wrenchi} client 
+     * @param {Message} message 
+     * @param {Array<string>} args 
+     */
     run: async function (client, message, args) {
-        message.reply("Pong!");
+       await message.reply("Pong!");
     },
 }
 
