@@ -1,6 +1,6 @@
 # Config Example
 ###  Language: Typescript
-###  Path: /src/data/config.ts
+###  Path: /data/config.ts
 
 
 ```ts
