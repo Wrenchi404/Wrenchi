@@ -37,5 +37,4 @@ export const TicketSchema: Schema = new Schema({
 });
 
 const Ticket: Model<TicketDocument> = model("Ticket", TicketSchema);
-
 export default Ticket

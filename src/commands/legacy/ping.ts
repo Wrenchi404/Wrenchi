@@ -1,5 +1,5 @@
 import { Message } from "discord.js"
-import Wrenchi from "../../lib/Wrenchi";
+import Wrenchi from "../../lib/Wrenchi"
 
 const Command = {
     info: {
