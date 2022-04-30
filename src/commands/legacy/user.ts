@@ -11,12 +11,35 @@ const Command = {
     run: async function (client: Wrenchi, message: Message, args: string[]) {
         const user = await User.findOne({ _id: message.author.id });
 
+        let status: string
+        let activity: [string]
+
         // Activities
         const CustomStatus = message.member.presence.activities.find(a => a.type === "CUSTOM");
-        let status: string
         if (!CustomStatus) status = "None"
-        if (CustomStatus.emoji) status = `${CustomStatus.emoji.name} ${CustomStatus.state}`
+        else if (CustomStatus.emoji) status = `${CustomStatus.emoji.name} ${CustomStatus.state}`
         else status = CustomStatus.state
+
+        // const Activity = message.member.presence.activities
+        // if (!Activity.length) activity.push("None")
+        // for (const acts of Activity) {
+        //     if (acts.type === "PLAYING") {
+        //         activity.push(acts.name.toString())
+        //     }
+
+        //     if (acts.type === "LISTENING") {
+        //         activity.push(acts.name.toString())
+        //     }
+
+        //     if (acts.type === "WATCHING") {
+        //         activity.push(acts.name.toString())
+        //     }
+
+        //     if (acts.type === "STREAMING") {
+        //         activity.push(acts.name.toString())
+        //     }
+        // }
+        // console.log(activity)
 
         if (!user) {
             const role = message.member.roles.cache.map((role) => role.name).slice(0, -1);
@@ -40,10 +63,16 @@ const Command = {
                     {
                         name: "Roles",
                         value: `${newUser.roles.join(", ")}`,
+                        inline: true
                     },
                     {
                         name: "Status",
                         value: `${status}`,
+                        inline: true
+                    },
+                    {
+                        name: "Activity",
+                        value: `${activity.forEach(a => a.split(" ").join(","))}`,
                         inline: true
                     }
                 ]);
@@ -63,10 +92,16 @@ const Command = {
                     {
                         name: "Roles",
                         value: `${user.roles.join(", ")}`,
+                        inline: true
                     },
                     {
                         name: "Status",
                         value: `${status}`,
+                        inline: true
+                    },
+                    {
+                        name: "Activity",
+                        value: `${activity.forEach(a => a.split(" ").join(","))}`,
                         inline: true
                     }
                 ]);
