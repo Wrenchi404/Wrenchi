@@ -1,13 +1,14 @@
-const { Client, Collection, Message } = require("discord.js");
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
-const { Manager } = require("erela.js");
-const { join } = require("path");
-const Config = require("../../data/config");
-const SlashCommand = require("./SlashCommand");
-const HandleError = require("../utils/HandleError");
-const fs = require("fs");
-const ytdl = require("ytdl-core");
+import { Client, Collection, Message } from "discord.js"
+import { REST } from "@discordjs/rest"
+import { Routes } from "discord-api-types/v9"
+import { Manager } from "erela.js"
+import path, { dirname as __dirname } from "path"
+import Config from "../data/config.js"
+import SlashCommand from "./SlashCommand.js"
+import HandleError from "../utils/HandleError.js"
+import GetChannel from "../utils/GetChannel.js"
+import fs from "fs"
+import ytdl from "ytdl-core"
 
 const ICommand = {
     info: {
@@ -24,7 +25,7 @@ const ICommand = {
     run: (client, message, args) => Promise.resolve()
 }
 
-class Wrenchi extends Client {
+export default class Wrenchi extends Client {
     // Config
     Config = Config
 
@@ -34,9 +35,9 @@ class Wrenchi extends Client {
     devRest = new REST({ version: "9" }).setToken(this.Config.Client.Token);
 
     // Commands
-    SlashDir = join(__dirname, "..", "commands", "slash");
-    LegacyDir = join(__dirname, "..", "commands", "legacy");
-    EventsDir = join(__dirname, "..", "events");
+    SlashDir = path.join(__dirname(".."), "..", "commands", "slash");
+    LegacyDir = path.join(__dirname(".."), "commands", "legacy");
+    EventsDir = path.join(__dirname(".."), "events");
 
     // Collections
     /**@type {Collection<string, ICommand>} LegacyCommands */
@@ -165,6 +166,9 @@ class Wrenchi extends Client {
         // Socket Event
         .on("socketClosed", (player, payload) => console.warn(`Socket Closed in ${player.options.guild}. Readon: ${payload.reason}, Code: ${payload.code}`));
 
+        // Utils
+        getChannel = GetChannel
+
     /**@param  {import("discord.js").ClientOptions} props */
     constructor(props = {
         intents: 32767
@@ -176,9 +180,9 @@ class Wrenchi extends Client {
         return new Promise(async (resolve, reject) => {
             const SlashCategories = fs.readdirSync(this.SlashDir);
             for (const SlashCategory of SlashCategories) {
-                const SlashFiles = fs.readdirSync(join(this.SlashDir, SlashCategory));
+                const SlashFiles = fs.readdirSync(path.join(this.SlashDir, SlashCategory));
                 for (const SlashFile of SlashFiles) {
-                    const Command = await require(join(this.SlashDir, SlashCategory, SlashFile));
+                    const Command = await import(path.join(this.SlashDir, SlashCategory, SlashFile));
                     Command.category = SlashCategory;
                     this.SlashCommands.set(Command.name, Command);
                     console.log(`Loaded Slash Command: ${Command.name}`);
@@ -192,7 +196,7 @@ class Wrenchi extends Client {
         return new Promise(async (resolve, reject) => {
             const LegacyFiles = fs.readdirSync(this.LegacyDir);
             for (const LegacyFile of LegacyFiles) {
-                const Command = await require(join(this.LegacyDir, LegacyFile));
+                const Command = await import(path.join(this.LegacyDir, LegacyFile));
                 this.LegacyCommands.set(Command.info.name, Command);
                 console.log(`Loaded Legacy Command: ${Command.info.name}`);
             }
@@ -205,7 +209,7 @@ class Wrenchi extends Client {
             const EventFiles = fs.readdirSync(this.EventsDir);
             if (!EventFiles) return console.error("No Events Founded");
             for (const EventFile of EventFiles) {
-                const event = await require(join(this.EventsDir, EventFile));
+                const event = await import(path.join(this.EventsDir, EventFile));
                 this.on(EventFile.split(".")[0], event.bind(null, this));
                 console.log(`Loaded Event: ${EventFile.split(".")[0]}`);
             }
@@ -253,5 +257,3 @@ class Wrenchi extends Client {
         await this.login(this.Config.Client.Token);
     }
 }
-
-module.exports = Wrenchi

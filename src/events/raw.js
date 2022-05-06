@@ -1,6 +1,6 @@
-const Wrenchi = require("../lib/Wrenchi");
+import Wrenchi from "../lib/Wrenchi.js"
 
 /**@param {Wrenchi} client */
-module.exports = async (client, payload) => {
+export default async (client, payload) => {
     client.Manager.updateVoiceState(payload);
 }

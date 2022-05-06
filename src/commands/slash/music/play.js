@@ -1,6 +1,6 @@
-const { MessageEmbed } = require("discord.js");
-const SlashCommand = require("../../../lib/SlashCommand");
-const ytdl = require("ytdl-core");
+import { MessageEmbed } from "discord.js"
+import SlashCommand from "../../../lib/SlashCommand.js"
+import ytdl from "ytdl-core"
 
 const command = new SlashCommand()
     .setName("play")
@@ -9,6 +9,8 @@ const command = new SlashCommand()
     .setRun(async (client, interation, options) => {
         const query = interation.options.getString("name");
         if (!query) return
+
+        
     });
 
-module.exports = command
+export default command

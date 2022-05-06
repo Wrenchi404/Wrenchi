@@ -1,4 +1,4 @@
-const SlashCommand = require("../../../lib/SlashCommand");
+import SlashCommand from "../../../lib/SlashCommand.js"
 
 const command = new SlashCommand()
     .setName("ping")
@@ -7,4 +7,4 @@ const command = new SlashCommand()
         interation.reply("Pong");
     });
 
-module.exports = command
+export default command

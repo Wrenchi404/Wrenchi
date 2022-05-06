@@ -1,5 +1,5 @@
-const { MessageEmbed, WebhookClient } = require("discord.js");
-const Wrenchi = require("../lib/Wrenchi");
+import Wrenchi from "../lib/Wrenchi.js"
+import { MessageEmbed, WebhookClient } from "discord.js"
 
 /**@param {Wrenchi} client */
 const HandleError = async (client) => {
@@ -46,4 +46,4 @@ const HandleError = async (client) => {
     });
 }
 
-module.exports = HandleError
+export default HandleError
