@@ -1,11 +1,11 @@
-import { Message } from "discord.js"
-import Wrenchi from "../lib/Wrenchi.js"
+const { Message } = require("discord.js")
+const Wrenchi = require("../lib/Wrenchi.js");
 
 /**
  * @param {Wrenchi} client 
  * @param {Message} message
  */
-export default async (client, message) => {
+module.exports = async (client, message) => {
     const prefix = client.Config.Client.Prefix
     if (message.author.bot || message.channel.type === "DM" || !message.content.startsWith(prefix)) return;
 

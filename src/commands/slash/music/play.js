@@ -1,6 +1,5 @@
-import { MessageEmbed } from "discord.js"
-import SlashCommand from "../../../lib/SlashCommand.js"
-import ytdl from "ytdl-core"
+const SlashCommand = require("../../../lib/SlashCommand");
+const ytdl = require("ytdl-core");
 
 const command = new SlashCommand()
     .setName("play")
@@ -13,4 +12,4 @@ const command = new SlashCommand()
         
     });
 
-export default command
+module.exports = command

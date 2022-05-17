@@ -1,5 +1,6 @@
-import Wrenchi from "../lib/Wrenchi.js"
-import { CommandInteraction } from "discord.js"
+const Wrenchi = require("../lib/Wrenchi.js");
+const { CommandInteraction } = require("discord.js");
+
 /**
  * 
  * @param {Wrenchi} client 
@@ -26,4 +27,4 @@ const GetChannel = async (client, interaction) => {
     return channel;
 }
 
-export default GetChannel
+module.exports = GetChannel

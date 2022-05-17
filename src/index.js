@@ -1,5 +1,5 @@
-import Wrenchi from "./lib/Wrenchi.js"
-const wrenchi = new Wrenchi()
-import "./utils/SetupConsole.js"
+const Wrenchi = require("./lib/Wrenchi");
+const wrenchi = new Wrenchi();
+require("./utils/SetupConsole");
 
 wrenchi.start();

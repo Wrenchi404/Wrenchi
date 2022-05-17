@@ -5,7 +5,6 @@
   "repository": "https://github.com/WrenchWD/Wrenchi.git",
   "author": "Wrenchi <70622477+WrenchWD@users.noreply.github.com>",
   "license": "MIT",
-  "type": "module",
   "scripts": {
     "start": "node ./src/index --dev"
   },

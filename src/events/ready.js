@@ -1,7 +1,7 @@
-import Wrenchi from "../lib/Wrenchi.js"
+const Wrenchi = require("../lib/Wrenchi.js");
 
 /**@param {Wrenchi} client */
-export default async (client) => {
+module.exports = async (client) => {
     console.log(`Wrenchi started running`);
     client.user.setPresence({ activities: [{ name: `Wrench HideOut`, type: "WATCHING" }], status: "dnd" });
 

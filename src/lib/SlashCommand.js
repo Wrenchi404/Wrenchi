@@ -1,7 +1,6 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { CommandInteraction, CommandInteractionOptionResolver } from "discord.js"
-import Wrenchi from "./Wrenchi.js"
-
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const { CommandInteraction, CommandInteractionOptionResolver } = require("discord.js");
+const Wrenchi = require("./Wrenchi");
 /**
     * 
     * @param {Wrenchi} client 
@@ -37,4 +36,4 @@ class SlashCommand extends SlashCommandBuilder {
     }
 }
 
-export default SlashCommand
+module.exports = SlashCommand

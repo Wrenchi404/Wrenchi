@@ -1,11 +1,11 @@
-import { Interaction } from "discord.js"
-import Wrenchi from "../lib/Wrenchi.js"
+const { Interaction } = require("discord.js");
+const Wrenchi = require("../lib/Wrenchi.js");
 
 /**
  * @param {Wrenchi} client 
  * @param {Interaction} interaction
  */
-export default async (client, interaction) => {
+module.exports = async (client, interaction) => {
     if (interaction.channel.type === "DM") return
 
     if (interaction.isCommand()) {

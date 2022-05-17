@@ -1,4 +1,4 @@
-import { error, log, warn } from "../lib/Logger.js"
+const { error, log, warn } = require("../lib/Logger");
 
 let oldConsoleLog = console.log;
 console.log = (...args) => {

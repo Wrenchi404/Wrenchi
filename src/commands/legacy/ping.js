@@ -1,5 +1,5 @@
-import { Message } from "discord.js"
-import Wrenchi from "../lib/Wrenchi.js"
+const { Message } = require("discord.js")
+const Wrenchi = require("../lib/Wrenchi.js");
 
 const Command = {
     info: {
@@ -19,4 +19,4 @@ const Command = {
     },
 }
 
-export default Command
+module.exports = Command

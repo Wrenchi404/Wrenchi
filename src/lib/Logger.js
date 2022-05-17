@@ -1,4 +1,4 @@
-import { red, yellow, cyan, green, blue } from "colorette"
+const { red, yellow, cyan, green, blue } = require("colorette")
 
 function getTime() {
     let date = new Date();
@@ -31,7 +31,7 @@ function error(...args) {
     return [getTime() + red("[ERROR]: "), ...args];
 }
 
-export {
+module.exports = {
     log,
     warn,
     error

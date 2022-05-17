@@ -1,14 +1,14 @@
-import { Client, Collection, Message } from "discord.js"
-import { REST } from "@discordjs/rest"
-import { Routes } from "discord-api-types/v9"
-import { Manager } from "erela.js"
-import path, { dirname as __dirname } from "path"
-import Config from "../data/config.js"
-import SlashCommand from "./SlashCommand.js"
-import HandleError from "../utils/HandleError.js"
-import GetChannel from "../utils/GetChannel.js"
-import fs from "fs"
-import ytdl from "ytdl-core"
+const { Client, Collection, Message } = require("discord.js");
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v9");
+const { Manager } = require("erela.js");
+const path = require("path");
+const Config = require("../data/config");
+const SlashCommand = require("./SlashCommand");
+const HandleError = require("../utils/HandleError");
+const GetChannel = require("../utils/GetChannel");
+const fs = require("fs");
+const ytdl = require("ytdl-core");
 
 const ICommand = {
     info: {
@@ -25,7 +25,7 @@ const ICommand = {
     run: (client, message, args) => Promise.resolve()
 }
 
-export default class Wrenchi extends Client {
+module.exports = class Wrenchi extends Client {
     // Config
     Config = Config
 
@@ -35,10 +35,10 @@ export default class Wrenchi extends Client {
     devRest = new REST({ version: "9" }).setToken(this.Config.Client.Token);
 
     // Commands
-    SlashDir = path.join(__dirname(".."), "..", "commands", "slash");
-    LegacyDir = path.join(__dirname(".."), "commands", "legacy");
-    EventsDir = path.join(__dirname(".."), "events");
-
+    SlashDir = path.join(__dirname, "..", "commands", "slash");
+    LegacyDir = path.join(__dirname, "..", "commands", "legacy");
+    EventsDir = path.join(__dirname, "events");
+    
     // Collections
     /**@type {Collection<string, ICommand>} LegacyCommands */
     LegacyCommands = new Collection();
@@ -248,6 +248,7 @@ export default class Wrenchi extends Client {
     }
 
     async start() {
+        console.log(this.SlashDir)
         if (this.devMode) console.warn("Starting in dev mode...");
         console.log("Starting Wrenchi...");
         await HandleError(this)
