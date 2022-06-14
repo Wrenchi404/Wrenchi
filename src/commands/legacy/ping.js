@@ -1,5 +1,5 @@
 const { Message } = require("discord.js")
-const Wrenchi = require("../lib/Wrenchi.js");
+const Wrenchi = require("../../lib/Wrenchi");
 
 const Command = {
     info: {

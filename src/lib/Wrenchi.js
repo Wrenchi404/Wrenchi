@@ -37,7 +37,7 @@ module.exports = class Wrenchi extends Client {
     // Commands
     SlashDir = path.join(__dirname, "..", "commands", "slash");
     LegacyDir = path.join(__dirname, "..", "commands", "legacy");
-    EventsDir = path.join(__dirname, "events");
+    EventsDir = path.join(__dirname, "..", "events");
     
     // Collections
     /**@type {Collection<string, ICommand>} LegacyCommands */
@@ -182,7 +182,7 @@ module.exports = class Wrenchi extends Client {
             for (const SlashCategory of SlashCategories) {
                 const SlashFiles = fs.readdirSync(path.join(this.SlashDir, SlashCategory));
                 for (const SlashFile of SlashFiles) {
-                    const Command = await import(path.join(this.SlashDir, SlashCategory, SlashFile));
+                    const Command = await require(path.join(this.SlashDir, SlashCategory, SlashFile));
                     Command.category = SlashCategory;
                     this.SlashCommands.set(Command.name, Command);
                     console.log(`Loaded Slash Command: ${Command.name}`);
@@ -196,7 +196,7 @@ module.exports = class Wrenchi extends Client {
         return new Promise(async (resolve, reject) => {
             const LegacyFiles = fs.readdirSync(this.LegacyDir);
             for (const LegacyFile of LegacyFiles) {
-                const Command = await import(path.join(this.LegacyDir, LegacyFile));
+                const Command = await require(path.join(this.LegacyDir, LegacyFile));
                 this.LegacyCommands.set(Command.info.name, Command);
                 console.log(`Loaded Legacy Command: ${Command.info.name}`);
             }
@@ -209,7 +209,7 @@ module.exports = class Wrenchi extends Client {
             const EventFiles = fs.readdirSync(this.EventsDir);
             if (!EventFiles) return console.error("No Events Founded");
             for (const EventFile of EventFiles) {
-                const event = await import(path.join(this.EventsDir, EventFile));
+                const event = await require(path.join(this.EventsDir, EventFile));
                 this.on(EventFile.split(".")[0], event.bind(null, this));
                 console.log(`Loaded Event: ${EventFile.split(".")[0]}`);
             }

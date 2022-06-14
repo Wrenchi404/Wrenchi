@@ -5,6 +5,6 @@ const command = new SlashCommand()
     .setDescription("Pong!")
     .setRun(async (client, interation, options) => {
         interation.reply("Pong");
-    });
+});
 
 module.exports = command
