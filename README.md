@@ -3,7 +3,7 @@
 **Latest Version: v2.5.0**
 
 # Before you begin:
-This bot is still in development and the code is only open-sourced not the bot! Make sure to check [Config Example](https://github.com/Wrenchi404/Wrenchi/blob/typescript/ConfigExample.md) before you start.
+This bot is still in development and the code is only open-sourced not the bot! Make sure to check [Config Example](https://github.com/Wrenchi404/Wrenchi/blob/typescript/ConfigExample.md) before you begin.
 
 # Features
 - Advance Client Class
@@ -11,7 +11,7 @@ This bot is still in development and the code is only open-sourced not the bot! 
 - Advance Slash Command Handler
 - Advance Command Handler
 - Advance Context Menu Handler
-And manny more coming soon........
+And mnny more coming soon........
 
 # Collaborators
 @SudhanPlayz @andrew264
