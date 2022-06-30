@@ -28,7 +28,8 @@ const config = {
     },
 
     Webhooks: {
-        ErrorLogger: "Webhook url"
+        ErrorLogger: "Webhook url",
+        Logger: "Webhook url"
     }
 }
 ```

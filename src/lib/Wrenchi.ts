@@ -63,7 +63,10 @@ class Wrenchi extends Client {
         .on("nodeReconnect", (node) => console.warn(`Reconnecting to Node: ${node.options.identifier}`))
 
         // Player Events
-        .on("playerCreate", (player) => console.log(`Player Created: ${player.guild}`))
+        .on("playerCreate", (player) => {
+            const guild = this.guilds.cache.get(player.guild);
+            console.log(`Player Created: ${guild.name}`)
+        })
         .on("playerDestroy", (player) => console.log(`Player Destroyed: ${player.guild}`))
         .on("playerMove", (player, oldChannel, newChannel) => {
             const guild = this.guilds.cache.get(player.guild);

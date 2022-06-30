@@ -39,16 +39,12 @@ const Command = new SlashCommand()
                 .setColor("NAVY")
                 .setFields([
                     {
-                        name: "Song Name",
-                        value: `${res.tracks[0].title}`,
-                    },
-                    {
                         name: "Duration",
                         value: `${duration}`,
                         inline: true
                     },
                     {
-                        name: 'Author',
+                        name: 'Author/Channel',
                         value: `${res.tracks[0].author}`,
                         inline: true
                     }
