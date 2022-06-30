@@ -3,8 +3,8 @@
 **Latest Version: v2.5.0**
 
 # Before you begin:
-This bot is still in development, so the bot not made available for public use (yet)!
-Make sure to check [Config Example](https://github.com/Wrenchi404/Wrenchi/blob/typescript/ConfigExample.md) if you try to host it yourself.
+This bot is still in development, so it is not made available for public use (yet)!
+Make sure to Check [Config Example](https://github.com/Wrenchi404/Wrenchi/blob/typescript/ConfigExample.md) if you try to host it yourself.
 
 # Features
 - Advanced Client Class
