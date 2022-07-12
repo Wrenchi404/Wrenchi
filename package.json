@@ -21,7 +21,7 @@
     "@types/fluent-ffmpeg": "^2.1.20",
     "colorette": "^2.0.16",
     "discord-api-types": "^0.29.0",
-    "discord.js": "^13.6.0",
+    "discord.js": "^13.8.1",
     "dotenv": "^16.0.0",
     "erela.js": "^2.3.3",
     "fluent-ffmpeg": "^2.1.2",
