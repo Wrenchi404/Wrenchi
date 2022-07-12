@@ -5,5 +5,5 @@ export default async (client: Wrenchi) => {
     client.user.setPresence({ activities: [{ name: `Wrench HideOut`, type: "WATCHING" }], status: "dnd" });
 
     // Erela Manager
-    // client.Manager.init(client.user.id);
+    client.Manager.init(client.user.id);
 }

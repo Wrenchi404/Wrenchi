@@ -11,7 +11,6 @@ import ytdl from "ytdl-core"
 import Config from "../../data/config"
 import SlashCommand from "./SlashCommand"
 import ContextMenu from "./ContextMenu"
-import connectMysql from "../utils/db"
 import getChannel from "../utils/getChannel"
 
 export interface ICommand {
@@ -36,8 +35,7 @@ class Wrenchi extends Client {
     public readonly getSubs = getSubs
     public readonly getLikes = getLikes
 
-    public db: mongoose.Mongoose;
-    public mysql = connectMysql();
+    public Mongo: mongoose.Mongoose;
     public handleError = HandleError(this)
     public Manager = new Manager({
         nodes: [
