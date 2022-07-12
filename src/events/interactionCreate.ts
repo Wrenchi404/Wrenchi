@@ -19,8 +19,6 @@ interface ITickets {
 }
 
 export default async (client: Wrenchi, interaction: Interaction) => {
-    const mysql = await client.mysql;
-
     if (interaction.isCommand()) {
         let command = client.SlashCommands.find(
             (x) => x.name == interaction.commandName
