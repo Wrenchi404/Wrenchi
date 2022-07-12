@@ -6,17 +6,6 @@ import {
     MessageButton,
     MessageEmbed,
 } from "discord.js"
-const wait = require('node:timers/promises').setTimeout;
-
-interface ITickets {
-    guildID: string,
-    channelID: string,
-    username: string,
-    userID: string,
-    state: string,
-    createdAt: Date,
-    deletedAt: Date
-}
 
 export default async (client: Wrenchi, interaction: Interaction) => {
     if (interaction.isCommand()) {
